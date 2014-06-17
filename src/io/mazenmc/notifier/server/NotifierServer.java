@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -20,7 +21,9 @@ public class NotifierServer extends Thread{
     public NotifierServer() throws IOException {
         server = new ServerSocket(5932);
 
-        server.setSoTimeout(10000);
+        server.setSoTimeout(Integer.MAX_VALUE);
+
+        NotifierPlugin.getPlugin().getLogger().info("Server on port 5932 has been started");
     }
 
     @Override
@@ -34,27 +37,37 @@ public class NotifierServer extends Thread{
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
                 //Run auth. process
-                String[] d = ((String) ois.readObject()).split(":");
+                String[] d = ois.readUTF().split(":");
 
                 String username = d[0];
                 char[] password = d[1].toCharArray();
 
                 if(!NotifierPlugin.getSettingsManager().getUserData().containsKey(username)) {
                     oos.writeObject(new PacketLoginError("Username/password is incorrect!"));
+                    NotifierPlugin.getPlugin().getLogger().info(username + " failed to log in, incorrect details");
                     continue;
                 }
 
                 if(!Arrays.equals(NotifierPlugin.getSettingsManager().getUserData().get(username), password)) {
                     oos.writeObject(new PacketLoginError("Username/password is incorrect!"));
+                    NotifierPlugin.getPlugin().getLogger().info(username + " failed to log in, incorrect details");
                     continue;
                 }
 
                 new NotifierClient(socket, username);
                 oos.writeObject(new PacketLoginSuccess());
-            }catch(IOException ex) {
+                NotifierPlugin.getPlugin().getLogger().info(username + " has logged in!");
+            }catch(SocketTimeoutException ex) {
+                try{
+                    server.close();
+
+                    server = new ServerSocket(5932);
+                    server.setSoTimeout(Integer.MAX_VALUE);
+                }catch(Exception e) {e.printStackTrace();}
+
                 ex.printStackTrace();
-            }catch(ClassNotFoundException ex) {
-                NotifierPlugin.getPlugin().getLogger().log(Level.SEVERE, "Client sent invalid Object type");
+            }catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     }

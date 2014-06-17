@@ -84,6 +84,7 @@ public class YMLFile {
     public void saveDefaultConfig() {
         try{
             getFile().createNewFile();
+            NotifierPlugin.getPlugin().saveResource(getName(), false);
         }catch(IOException ignored) {}
     }
 }

@@ -20,12 +20,14 @@ public class NotifierClient {
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
     private String username;
+    private NotifierClientThread clientThread;
 
     public NotifierClient(Socket socket, String username) throws IOException {
         this.socket = socket;
         outputStream = new ObjectOutputStream(socket.getOutputStream());
         inputStream = new ObjectInputStream(socket.getInputStream());
         this.username = username;
+        clientThread = new NotifierClientThread();
         login();
     }
 
@@ -75,6 +77,7 @@ public class NotifierClient {
 
     public void login() {
         clients.add(this);
+        clientThread.start();
         NotifierPlugin.getEventHandler().callEvent(new ClientLoginEvent(this));
     }
 

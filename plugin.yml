@@ -1,0 +1,4 @@
+name: Notifier
+version: 0.1
+author: MazenMC
+main: io.mazenmc.notifier.NotifierPlugin
