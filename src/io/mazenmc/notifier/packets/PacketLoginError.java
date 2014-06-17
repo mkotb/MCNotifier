@@ -11,6 +11,10 @@ public class PacketLoginError extends Packet{
         this.reason = reason;
     }
 
+    private PacketLoginError() {
+        //Constructor for serialization
+    }
+
     public String getReason() {
         return reason;
     }

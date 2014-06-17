@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.logging.Level;
 
 public class NotifierServer extends Thread{
@@ -33,8 +34,8 @@ public class NotifierServer extends Thread{
             try{
                 socket = server.accept();
 
-                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
                 //Run auth. process
                 String[] d = ois.readUTF().split(":");
@@ -44,18 +45,21 @@ public class NotifierServer extends Thread{
 
                 if(!NotifierPlugin.getSettingsManager().getUserData().containsKey(username)) {
                     oos.writeObject(new PacketLoginError("Username/password is incorrect!"));
-                    NotifierPlugin.getPlugin().getLogger().info(username + " failed to log in, incorrect details");
+                    oos.flush();
                     continue;
                 }
 
                 if(!Arrays.equals(NotifierPlugin.getSettingsManager().getUserData().get(username), password)) {
                     oos.writeObject(new PacketLoginError("Username/password is incorrect!"));
-                    NotifierPlugin.getPlugin().getLogger().info(username + " failed to log in, incorrect details");
+                    oos.flush();
                     continue;
                 }
 
-                new NotifierClient(socket, username);
                 oos.writeObject(new PacketLoginSuccess());
+                oos.flush();
+
+                new NotifierClient(socket, ois, oos, username);
+
                 NotifierPlugin.getPlugin().getLogger().info(username + " has logged in!");
             }catch(SocketTimeoutException ex) {
                 try{

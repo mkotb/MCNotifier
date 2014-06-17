@@ -3,10 +3,12 @@ package io.mazenmc.notifier.client;
 import io.mazenmc.notifier.NotifierPlugin;
 import io.mazenmc.notifier.events.*;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,10 +24,10 @@ public class NotifierClient {
     private String username;
     private NotifierClientThread clientThread;
 
-    public NotifierClient(Socket socket, String username) throws IOException {
+    public NotifierClient(Socket socket, ObjectInputStream inputStream, ObjectOutputStream outputStream, String username) throws IOException {
         this.socket = socket;
-        outputStream = new ObjectOutputStream(socket.getOutputStream());
-        inputStream = new ObjectInputStream(socket.getInputStream());
+        this.outputStream = outputStream;
+        this.inputStream = inputStream;
         this.username = username;
         clientThread = new NotifierClientThread();
         login();
@@ -50,6 +52,7 @@ public class NotifierClient {
     public void write(Object obj) {
         try{
             outputStream.writeObject(obj);
+            flush();
         }catch(IOException ex) {
             ex.printStackTrace();
         }
@@ -58,6 +61,7 @@ public class NotifierClient {
     public void write(String str) {
         try{
             outputStream.writeChars(str);
+            flush();
         }catch(IOException ex) {
             ex.printStackTrace();
         }
@@ -66,6 +70,15 @@ public class NotifierClient {
     public void write(byte[] bytes) {
         try{
             outputStream.write(bytes);
+            flush();
+        }catch(IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void flush() {
+        try{
+            outputStream.flush();
         }catch(IOException ex) {
             ex.printStackTrace();
         }
@@ -111,6 +124,14 @@ public class NotifierClient {
 
                 try{
                     obj = getInputStream().readObject();
+                }catch(SocketTimeoutException ex) {
+                    clients.remove(copy());
+                    //TODO: Send logout packet
+                    break;
+                }catch(EOFException ex) {
+                    clients.remove(copy());
+                    //TODO: Send logout packet
+                    break;
                 }catch(IOException ex) {
                     ex.printStackTrace();
                     continue;

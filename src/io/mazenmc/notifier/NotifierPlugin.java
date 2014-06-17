@@ -19,6 +19,7 @@ public class NotifierPlugin extends JavaPlugin{
     public void onEnable() {
         //Create new instances
         plugin = this;
+        saveDefaultConfig();
         settingsManager = new SettingsManager();
         notifierEventHandler = new NotifierEventHandler();
 

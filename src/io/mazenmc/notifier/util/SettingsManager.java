@@ -11,8 +11,6 @@ public class SettingsManager {
     private final HashMap<String, char[]> userData = new HashMap<>();
 
     public SettingsManager() {
-        config.saveDefaultConfig();
-
         for(String s : config.getConfig().getStringList("users")) {
             String[] data = s.split(":");
 
