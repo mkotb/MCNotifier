@@ -5,15 +5,11 @@ import io.mazenmc.notifier.client.NotifierClient;
 import io.mazenmc.notifier.packets.PacketLoginError;
 import io.mazenmc.notifier.packets.PacketLoginSuccess;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.logging.Level;
 
 public class NotifierServer extends Thread{
 
@@ -34,8 +30,8 @@ public class NotifierServer extends Thread{
             try{
                 socket = server.accept();
 
-                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
+                DataInputStream ois = new DataInputStream(socket.getInputStream());
 
                 //Run auth. process
                 String[] d = ois.readUTF().split(":");
@@ -44,18 +40,18 @@ public class NotifierServer extends Thread{
                 char[] password = d[1].toCharArray();
 
                 if(!NotifierPlugin.getSettingsManager().getUserData().containsKey(username)) {
-                    oos.writeObject(new PacketLoginError("Username/password is incorrect!"));
+                    oos.writeUTF(new PacketLoginError(new String[]{"Username/password is incorrect!"}).toString());
                     oos.flush();
                     continue;
                 }
 
                 if(!Arrays.equals(NotifierPlugin.getSettingsManager().getUserData().get(username), password)) {
-                    oos.writeObject(new PacketLoginError("Username/password is incorrect!"));
+                    oos.writeUTF(new PacketLoginError(new String[]{"Username/password is incorrect!"}).toString());
                     oos.flush();
                     continue;
                 }
 
-                oos.writeObject(new PacketLoginSuccess());
+                oos.writeUTF(new PacketLoginSuccess(null).toString());
                 oos.flush();
 
                 new NotifierClient(socket, ois, oos, username);

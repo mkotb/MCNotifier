@@ -2,16 +2,13 @@ package io.mazenmc.notifier.client;
 
 import io.mazenmc.notifier.NotifierPlugin;
 import io.mazenmc.notifier.events.*;
+import io.mazenmc.notifier.packets.Packet;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import static io.mazenmc.notifier.NotifierPlugin.*;
 
@@ -19,12 +16,12 @@ public class NotifierClient {
 
     private static  List<NotifierClient> clients = new ArrayList<>();
     private Socket socket;
-    private ObjectOutputStream outputStream;
-    private ObjectInputStream inputStream;
+    private DataOutputStream outputStream;
+    private DataInputStream inputStream;
     private String username;
     private NotifierClientThread clientThread;
 
-    public NotifierClient(Socket socket, ObjectInputStream inputStream, ObjectOutputStream outputStream, String username) throws IOException {
+    public NotifierClient(Socket socket, DataInputStream inputStream, DataOutputStream outputStream, String username) throws IOException {
         this.socket = socket;
         this.outputStream = outputStream;
         this.inputStream = inputStream;
@@ -33,7 +30,7 @@ public class NotifierClient {
         login();
     }
 
-    public ObjectInputStream getInputStream() {
+    public DataInputStream getInputStream() {
         return inputStream;
     }
 
@@ -41,7 +38,7 @@ public class NotifierClient {
         return socket;
     }
 
-    public ObjectOutputStream getOutputStream() {
+    public DataOutputStream getOutputStream() {
         return outputStream;
     }
 
@@ -49,27 +46,10 @@ public class NotifierClient {
         return username;
     }
 
-    public void write(Object obj) {
+    public void write(Packet packet) {
         try{
-            outputStream.writeObject(obj);
-            flush();
-        }catch(IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void write(String str) {
-        try{
-            outputStream.writeChars(str);
-            flush();
-        }catch(IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void write(byte[] bytes) {
-        try{
-            outputStream.write(bytes);
+            getEventHandler().callEvent(new PacketSendEvent(packet));
+            outputStream.writeUTF(packet.toString());
             flush();
         }catch(IOException ex) {
             ex.printStackTrace();
@@ -82,10 +62,6 @@ public class NotifierClient {
         }catch(IOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    public void logout() {
-        write("/logout");
     }
 
     public void login() {
@@ -120,10 +96,10 @@ public class NotifierClient {
         @Override
         public void run() {
             while(true) {
-                Object obj;
+                String rtn;
 
                 try{
-                    obj = getInputStream().readObject();
+                    rtn = getInputStream().readUTF();
                 }catch(SocketTimeoutException ex) {
                     clients.remove(copy());
                     //TODO: Send logout packet
@@ -135,22 +111,9 @@ public class NotifierClient {
                 }catch(IOException ex) {
                     ex.printStackTrace();
                     continue;
-                }catch(ClassNotFoundException ex) {
-                    NotifierPlugin.getPlugin().getLogger().log(Level.SEVERE, "Client sent invalid Object type");
-                    continue;
                 }
 
-                if(obj instanceof String) {
-                    getEventHandler().callEvent(new StringReceiveEvent((String) obj, copy()));
-                }else if(obj instanceof Boolean) {
-                    getEventHandler().callEvent(new BooleanReceiveEvent((Boolean) obj, copy()));
-                }else if(obj instanceof Number) {
-                    getEventHandler().callEvent(new NumberReceiveEvent((Number) obj, copy()));
-                }else if(obj instanceof Character) {
-                    getEventHandler().callEvent(new CharacterReceiveEvent((Character) obj, copy()));
-                }else{
-                    getEventHandler().callEvent(new ObjectReceiveEvent(obj, copy()));
-                }
+                getEventHandler().callEvent(new PacketReceiveEvent(rtn.split(" ")));
             }
         }
     }

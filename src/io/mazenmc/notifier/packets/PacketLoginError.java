@@ -1,18 +1,20 @@
 package io.mazenmc.notifier.packets;
 
-/**
- * Created by mazen on 6/16/14.
- */
 public class PacketLoginError extends Packet{
 
     private String reason;
+    private static final int id = 0;
 
-    public PacketLoginError(String reason) {
-        this.reason = reason;
-    }
+    public PacketLoginError(String[] args) {
+        StringBuilder sb = new StringBuilder("");
 
-    private PacketLoginError() {
-        //Constructor for serialization
+        for(String s : args) {
+            sb.append(s);
+            sb.append(' ');
+        }
+
+        this.reason = sb.toString();
+        register(id);
     }
 
     public String getReason() {
@@ -22,5 +24,14 @@ public class PacketLoginError extends Packet{
     @Override
     public void run() {
         //Empty method, all running of this method should be done on mobile.
+    }
+
+    @Override
+    public String toString() {
+        return id + " " + reason;
+    }
+
+    public static int getID() {
+        return id;
     }
 }
