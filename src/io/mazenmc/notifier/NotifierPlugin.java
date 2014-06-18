@@ -1,6 +1,8 @@
 package io.mazenmc.notifier;
 
+import io.mazenmc.notifier.client.NotifierClient;
 import io.mazenmc.notifier.event.NotifierEventHandler;
+import io.mazenmc.notifier.packets.PacketServerShutdown;
 import io.mazenmc.notifier.server.NotifierServer;
 import io.mazenmc.notifier.util.SettingsManager;
 import org.bukkit.Bukkit;
@@ -35,6 +37,10 @@ public class NotifierPlugin extends JavaPlugin{
 
     @Override
     public void onDisable() {
+        for(NotifierClient client : NotifierClient.getClients()) {
+            client.write(new PacketServerShutdown(null));
+        }
+
         plugin = null;
         settingsManager = null;
     }

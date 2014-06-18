@@ -1,16 +1,16 @@
 package io.mazenmc.notifier.packets;
 
-public class PacketLoginSuccess extends Packet{
+public class PacketServerShutdown extends Packet {
 
-    private static final int id = 1;
+    private static final int id = 3;
 
-    public PacketLoginSuccess(String[] args) {
-        register(id);
+    public PacketServerShutdown(String[] args) {
+        //Pretty much..
     }
 
     @Override
     public void handle() {
-        //Empty method
+        //No handling here..
     }
 
     public static int getID() {

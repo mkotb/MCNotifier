@@ -22,7 +22,7 @@ public class PacketLoginError extends Packet{
     }
 
     @Override
-    public void run() {
+    public void handle() {
         //Empty method, all running of this method should be done on mobile.
     }
 

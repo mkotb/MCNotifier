@@ -10,7 +10,7 @@ public abstract class Packet {
         packets.put(id, this);
     }
 
-    public abstract void run();
+    public abstract void handle();
 
     public static Packet getPacket(int id) {
         return packets.get(id);
