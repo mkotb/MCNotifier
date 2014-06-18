@@ -3,6 +3,7 @@ package io.mazenmc.notifier.client;
 import io.mazenmc.notifier.NotifierPlugin;
 import io.mazenmc.notifier.events.*;
 import io.mazenmc.notifier.packets.Packet;
+import io.mazenmc.notifier.packets.PacketEncryptKey;
 import io.mazenmc.notifier.packets.PacketReceiveError;
 
 import java.io.*;
@@ -10,8 +11,10 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static io.mazenmc.notifier.NotifierPlugin.*;
+import static io.mazenmc.notifier.util.Encrypter.*;
 
 public class NotifierClient {
 
@@ -21,12 +24,14 @@ public class NotifierClient {
     private DataInputStream inputStream;
     private String username;
     private NotifierClientThread clientThread;
+    private UUID encryptionKey;
 
     public NotifierClient(Socket socket, DataInputStream inputStream, DataOutputStream outputStream, String username) throws IOException {
         this.socket = socket;
         this.outputStream = outputStream;
         this.inputStream = inputStream;
         this.username = username;
+        encryptionKey = UUID.randomUUID();
         clientThread = new NotifierClientThread();
         login();
     }
@@ -50,6 +55,17 @@ public class NotifierClient {
     public void write(Packet packet) {
         try{
             getEventHandler().callEvent(new PacketSendEvent(packet));
+            outputStream.write(encrypt(packet.toString(), encryptionKey));
+            flush();
+        }catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Deprecated
+    public void writeNoEncryption(Packet packet) {
+        try{
+            getEventHandler().callEvent(new PacketSendEvent(packet));
             outputStream.writeUTF(packet.toString());
             flush();
         }catch(IOException ex) {
@@ -71,6 +87,7 @@ public class NotifierClient {
 
     public void login() {
         clients.add(this);
+        writeNoEncryption(new PacketEncryptKey(encryptionKey));
         clientThread.start();
         NotifierPlugin.getEventHandler().callEvent(new ClientLoginEvent(this));
     }
@@ -108,7 +125,9 @@ public class NotifierClient {
                 String rtn;
 
                 try{
-                    rtn = getInputStream().readUTF();
+                    byte[] bytes = getInputStream().readUTF().getBytes();
+
+                    rtn = decrypt(bytes, encryptionKey);
                 }catch(SocketTimeoutException ex) {
                     clients.remove(copy());
                     //TODO: Send logout packet
@@ -117,7 +136,7 @@ public class NotifierClient {
                     clients.remove(copy());
                     //TODO: Send logout packet
                     break;
-                }catch(IOException ex) {
+                }catch(Exception ex) {
                     write(new PacketReceiveError(new String[] {ex.getMessage()}));
                     ex.printStackTrace();
                     continue;
