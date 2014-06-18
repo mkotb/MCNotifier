@@ -3,6 +3,7 @@ package io.mazenmc.notifier.client;
 import io.mazenmc.notifier.NotifierPlugin;
 import io.mazenmc.notifier.events.*;
 import io.mazenmc.notifier.packets.Packet;
+import io.mazenmc.notifier.packets.PacketReceiveError;
 
 import java.io.*;
 import java.net.Socket;
@@ -64,6 +65,10 @@ public class NotifierClient {
         }
     }
 
+    public int getID() {
+        return clients.indexOf(this);
+    }
+
     public void login() {
         clients.add(this);
         clientThread.start();
@@ -91,6 +96,10 @@ public class NotifierClient {
         return clients;
     }
 
+    public static NotifierClient getClient(int id) {
+        return getClients().get(id);
+    }
+
     class NotifierClientThread extends Thread {
 
         @Override
@@ -109,11 +118,12 @@ public class NotifierClient {
                     //TODO: Send logout packet
                     break;
                 }catch(IOException ex) {
+                    write(new PacketReceiveError(new String[] {ex.getMessage()}));
                     ex.printStackTrace();
                     continue;
                 }
 
-                getEventHandler().callEvent(new PacketReceiveEvent(rtn.split(" ")));
+                getEventHandler().callEvent(new PacketReceiveEvent(rtn.split(" "), copy()));
             }
         }
     }
