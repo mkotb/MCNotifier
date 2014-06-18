@@ -4,9 +4,7 @@ public class PacketLoginSuccess extends Packet{
 
     private static final int id = 1;
 
-    public PacketLoginSuccess(String[] args) {
-        register(id);
-    }
+    public PacketLoginSuccess(String[] args) {}
 
     @Override
     public void handle() {

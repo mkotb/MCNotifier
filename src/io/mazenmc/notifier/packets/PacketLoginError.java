@@ -14,7 +14,6 @@ public class PacketLoginError extends Packet{
         }
 
         this.reason = sb.toString();
-        register(id);
     }
 
     public String getReason() {

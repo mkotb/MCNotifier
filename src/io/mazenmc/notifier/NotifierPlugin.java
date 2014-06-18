@@ -2,8 +2,10 @@ package io.mazenmc.notifier;
 
 import io.mazenmc.notifier.client.NotifierClient;
 import io.mazenmc.notifier.event.NotifierEventHandler;
+import io.mazenmc.notifier.packets.Packet;
 import io.mazenmc.notifier.packets.PacketServerShutdown;
 import io.mazenmc.notifier.server.NotifierServer;
+import io.mazenmc.notifier.util.ClassFinder;
 import io.mazenmc.notifier.util.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +18,7 @@ public class NotifierPlugin extends JavaPlugin{
     private static NotifierPlugin plugin;
     private static SettingsManager settingsManager;
     private static NotifierEventHandler notifierEventHandler;
+    private static ClassFinder classFinder;
 
     @Override
     public void onEnable() {
@@ -24,6 +27,8 @@ public class NotifierPlugin extends JavaPlugin{
         saveDefaultConfig();
         settingsManager = new SettingsManager();
         notifierEventHandler = new NotifierEventHandler();
+        classFinder = new ClassFinder();
+        Packet.registerAll();
 
         //Start the NotifierServer
         try {
@@ -55,5 +60,9 @@ public class NotifierPlugin extends JavaPlugin{
 
     public static NotifierEventHandler getEventHandler() {
         return notifierEventHandler;
+    }
+
+    public static ClassFinder getClassFinder() {
+        return classFinder;
     }
 }

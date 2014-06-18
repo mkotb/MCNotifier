@@ -18,7 +18,7 @@ public class PacketReader {
         }
 
         try{
-            return Packet.getPacket(id).getClass().getConstructor(String[].class).newInstance(args);
+            return (Packet) Packet.getPacket(id).getConstructor(String[].class).newInstance(args);
         }catch(Exception ex) {
             return null;
         }
