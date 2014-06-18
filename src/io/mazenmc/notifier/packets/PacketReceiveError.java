@@ -2,7 +2,7 @@ package io.mazenmc.notifier.packets;
 
 public class PacketReceiveError extends Packet{
 
-    private static final int id = 4;
+    private static final int id = 3;
     private String reason;
 
     public PacketReceiveError(String[] args) {

@@ -2,7 +2,7 @@ package io.mazenmc.notifier.packets;
 
 public class PacketServerShutdown extends Packet {
 
-    private static final int id = 3;
+    private static final int id = 2;
 
     public PacketServerShutdown(String[] args) {
         //Pretty much..
