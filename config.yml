@@ -1,2 +1,5 @@
 users:
 - username:password
+
+suspicious-commands:
+- '/op'

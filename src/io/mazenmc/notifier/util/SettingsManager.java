@@ -2,9 +2,6 @@ package io.mazenmc.notifier.util;
 
 import java.util.HashMap;
 
-/**
- * Created by mazen on 6/16/14.
- */
 public class SettingsManager {
 
     private final YMLFile config = new YMLFile("config", null);
@@ -20,5 +17,9 @@ public class SettingsManager {
 
     public HashMap<String, char[]> getUserData() {
         return userData;
+    }
+
+    public boolean isSuspiciousCommand(String command) {
+        return config.getConfig().getStringList("suspicious-commands").contains(command);
     }
 }
