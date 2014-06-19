@@ -17,15 +17,22 @@ public final class ClassFinder {
     private final String CLASS_SUFFIX = ".class";
     private final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the given '%s' package exists?";
 
+    /**
+     * Gets all the classes within a certain package
+     * @param scannedPackage
+     * @return The classes found
+     */
     public final List<Class<?>> find(final String scannedPackage) {
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         final String scannedPath = scannedPackage.replace(DOT, SLASH);
         final Enumeration<URL> resources;
+
         try {
             resources = classLoader.getResources(scannedPath);
         } catch (IOException e) {
             throw new IllegalArgumentException(String.format(BAD_PACKAGE_ERROR, scannedPath, scannedPackage), e);
         }
+
         final List<Class<?>> classes = new LinkedList<>();
         while (resources.hasMoreElements()) {
             final File file = new File(resources.nextElement().getFile());

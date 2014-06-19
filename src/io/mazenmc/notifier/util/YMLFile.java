@@ -8,9 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-/**
- * Created by Mazen on 2014-04-14. Finished on 2014-04-14
- */
 public class YMLFile {
 
     String fileName;

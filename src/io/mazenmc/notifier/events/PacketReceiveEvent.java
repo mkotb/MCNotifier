@@ -6,7 +6,7 @@ import io.mazenmc.notifier.packets.Packet;
 import io.mazenmc.notifier.packets.PacketReader;
 
 /**
- * Created by mazen on 6/17/14.
+ * Event which will be called any time a packet has been received by a client
  */
 public class PacketReceiveEvent extends NotifierEvent{
 

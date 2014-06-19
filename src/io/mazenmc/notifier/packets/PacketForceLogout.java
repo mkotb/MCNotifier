@@ -1,5 +1,8 @@
 package io.mazenmc.notifier.packets;
 
+/**
+ * Packet notifying the client that they have been forced logged out by the server
+ */
 public class PacketForceLogout extends Packet{
 
     private String reason;

@@ -1,5 +1,8 @@
 package io.mazenmc.notifier.packets;
 
+/**
+ * Packet which will be notifying the client that they have logged in successfully
+ */
 public class PacketLoginSuccess extends Packet{
 
     private static final int id = 1;

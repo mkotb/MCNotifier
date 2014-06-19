@@ -1,6 +1,5 @@
 package io.mazenmc.notifier.client;
 
-import io.mazenmc.notifier.Notifier;
 import io.mazenmc.notifier.NotifierPlugin;
 import io.mazenmc.notifier.events.*;
 import io.mazenmc.notifier.packets.Packet;
@@ -28,6 +27,14 @@ public class NotifierClient {
     private NotifierClientThread clientThread;
     private UUID encryptionKey;
 
+    /**
+     * Constructor for a new NotifierClient
+     * @param socket The socket which will be stored for API use
+     * @param inputStream The input stream that will be used to communicate with the client
+     * @param outputStream The output stream that will be used to communicate with the client
+     * @param username The username that has been defined in the config.yml
+     * @throws IOException
+     */
     public NotifierClient(Socket socket, DataInputStream inputStream, DataOutputStream outputStream, String username) throws IOException {
         this.socket = socket;
         this.outputStream = outputStream;
@@ -38,22 +45,42 @@ public class NotifierClient {
         login();
     }
 
+    /**
+     * Gets the input stream
+     * @return The input stream
+     */
     public DataInputStream getInputStream() {
         return inputStream;
     }
 
+    /**
+     * Gets the socket
+     * @return The socket
+     */
     public Socket getSocket() {
         return socket;
     }
 
+    /**
+     * Gets the output stream
+     * @return The output stream
+     */
     public DataOutputStream getOutputStream() {
         return outputStream;
     }
 
+    /**
+     * Gets the username of the client
+     * @return The client stream
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Writes a packet to the client
+     * @param packet The packet you wish to write to the client
+     */
     public void write(Packet packet) {
         try{
             getEventHandler().callEvent(new PacketSendEvent(packet));
@@ -64,8 +91,12 @@ public class NotifierClient {
         }
     }
 
+    /**
+     * Writes a packet without encryption
+     * @param packet The packet you wish to write to the client
+     */
     @Deprecated
-    public void writeNoEncryption(Packet packet) {
+    public void _INVALID_writeNoEncryption(Packet packet) {
         try{
             getEventHandler().callEvent(new PacketSendEvent(packet));
             outputStream.writeUTF(packet.toString());
@@ -75,6 +106,9 @@ public class NotifierClient {
         }
     }
 
+    /**
+     * Flush all buffered data in the input stream
+     */
     public void flush() {
         try{
             outputStream.flush();
@@ -83,17 +117,27 @@ public class NotifierClient {
         }
     }
 
+    /**
+     * Gets the ID of the client
+     * @return ID of the client
+     */
     public int getID() {
         return clients.indexOf(this);
     }
 
+    /**
+     * Login the client if haven't already. I recommend not to use this.
+     */
     public void login() {
         clients.add(this);
-        writeNoEncryption(new PacketEncryptKey(encryptionKey));
+        _INVALID_writeNoEncryption(new PacketEncryptKey(encryptionKey));
         clientThread.start();
         NotifierPlugin.getEventHandler().callEvent(new ClientLoginEvent(this));
     }
 
+    /**
+     * Logout the client
+     */
     public void logout() {
         clients.remove(this);
         clientThread.interrupt();
@@ -101,14 +145,27 @@ public class NotifierClient {
         NotifierPlugin.getEventHandler().callEvent(new ClientLogoutEvent(this));
     }
 
+    /**
+     * Gets a copy of the client
+     * @return The client
+     */
     public NotifierClient copy() {
         return this;
     }
 
+    /**
+     * Simulate a packet as-if the client has sent it
+     * @param packet The packet you wish to simulate
+     */
     public void simulatePacket(Packet packet) {
         getEventHandler().callEvent(new PacketReceiveEvent(packet.toString().split(" "), this));
     }
 
+    /**
+     * Finds the client instance by their username
+     * @param username The username that has been defined in the config.yml
+     * @return Found client
+     */
     public static NotifierClient getClient(String username) {
         for(NotifierClient client : getClients()) {
             if(client.getUsername().equals(username))
@@ -118,10 +175,19 @@ public class NotifierClient {
         return null;
     }
 
+    /**
+     * Get all signed in clients
+     * @return All signed in clients
+     */
     public static List<NotifierClient> getClients() {
         return clients;
     }
 
+    /**
+     * Finds the client instance by their ID
+     * @param id The ID you wish to use to find
+     * @return Found client
+     */
     public static NotifierClient getClient(int id) {
         return getClients().get(id);
     }

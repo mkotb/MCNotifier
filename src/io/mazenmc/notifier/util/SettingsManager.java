@@ -15,10 +15,19 @@ public class SettingsManager {
         }
     }
 
+    /**
+     * Gets all the user data defined in config loaded at startup
+     * @return The User data
+     */
     public HashMap<String, char[]> getUserData() {
         return userData;
     }
 
+    /**
+     * Gets if the command provided is suspicious through the config file
+     * @param command The command you wish to check
+     * @return If the command is suspicious or not
+     */
     public boolean isSuspiciousCommand(String command) {
         return config.getConfig().getStringList("suspicious-commands").contains(command);
     }

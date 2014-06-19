@@ -4,7 +4,7 @@ import io.mazenmc.notifier.client.NotifierClient;
 import io.mazenmc.notifier.event.NotifierEvent;
 
 /**
- * Created by mazen on 6/16/14.
+ * Event which will be called when a client has logged in
  */
 public class ClientLoginEvent extends NotifierEvent{
 

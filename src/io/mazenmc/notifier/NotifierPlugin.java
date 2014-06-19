@@ -17,6 +17,7 @@ import java.util.logging.Level;
 
 public class NotifierPlugin extends JavaPlugin {
 
+    /* Object instances */
     private static NotifierPlugin plugin;
     private static SettingsManager settingsManager;
     private static NotifierEventHandler notifierEventHandler;
@@ -24,14 +25,17 @@ public class NotifierPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        //Create new instances
+        //Define instances
         plugin = this;
         saveDefaultConfig();
         settingsManager = new SettingsManager();
         notifierEventHandler = new NotifierEventHandler();
         classFinder = new ClassFinder();
+
+        //Register packet classes
         Packet.registerAll();
 
+        //Register Notifier plugin classes
         try{
             registerListeners();
         }catch(Exception ex) {
@@ -51,30 +55,54 @@ public class NotifierPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        //Notify clients of server shutdown
         for(NotifierClient client : NotifierClient.getClients()) {
             client.write(new PacketServerShutdown(null));
         }
 
+        //Avoiding any memory leaks..
         plugin = null;
         settingsManager = null;
+        notifierEventHandler = null;
+        classFinder = null;
     }
 
+    /**
+     * Gets the plugin instance
+     * @return Plugin instance
+     */
     public static NotifierPlugin getPlugin() {
         return plugin;
     }
 
+    /**
+     * Gets the SettingsManagers instance
+     * @return SettingManager instance
+     */
     public static SettingsManager getSettingsManager() {
         return settingsManager;
     }
 
+    /**
+     * Gets the NotifierEventHandler instance
+     * @return NotifierEventHandler instance
+     */
     public static NotifierEventHandler getEventHandler() {
         return notifierEventHandler;
     }
 
+    /**
+     * Gets the ClassFinders instance
+     * @return ClassFinder instance
+     */
     public static ClassFinder getClassFinder() {
         return classFinder;
     }
 
+    /**
+     * Register all Notifier's listeners
+     * @throws Exception
+     */
     private void registerListeners() throws Exception{
         for(Class<?> cls : getClassFinder().find("io.mazenmc.notifier.listeners.bukkit")) {
             if(cls.isAssignableFrom(Listener.class)) {

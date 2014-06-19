@@ -5,10 +5,17 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.UUID;
 
-public class Encrypter {
+public final class Encrypter {
 
-    private static String IV = "AAAAAAAAAAAAAAAA";
+    private final static String IV = "AAAAAAAAAAAAAAAA";
 
+    /**
+     * Encrypts the text provided with the key provided (key is required to decrypt)
+     * @param plainText The text you wish to encrypt
+     * @param encryptionKey The key you wish to use to encrypt the text
+     * @return Encrypted text
+     * @throws Exception
+     */
     public static byte[] encrypt(String plainText, UUID encryptionKey) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding", "SunJCE");
         SecretKeySpec key = new SecretKeySpec(encryptionKey.toString().getBytes("UTF-8"), "AES");
@@ -16,6 +23,13 @@ public class Encrypter {
         return cipher.doFinal(plainText.getBytes("UTF-8"));
     }
 
+    /**
+     * Decrypts the bytes provided with the key provided
+     * @param cipherText The bytes you wish to decrypt
+     * @param encryptionKey The key you wish to use to decrypt the text
+     * @return Decrypted text
+     * @throws Exception
+     */
     public static String decrypt(byte[] cipherText, UUID encryptionKey) throws Exception{
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding", "SunJCE");
         SecretKeySpec key = new SecretKeySpec(encryptionKey.toString().getBytes("UTF-8"), "AES");

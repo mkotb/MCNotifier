@@ -17,6 +17,10 @@ public class NotifierEventHandler {
         eventData = new HashMap<>();
     }
 
+    /**
+     * Calls the event mentioned
+     * @param event The event you wish to call
+     */
     public void callEvent(NotifierEvent event) {
         if(!eventData.containsKey(event.getClass())) {
             eventData.put(event.getClass(), new ArrayList<NotifierListener>());
@@ -43,6 +47,10 @@ public class NotifierEventHandler {
         }
     }
 
+    /**
+     * Registers a listener to be called when an event is
+     * @param listener The listener you wish to register
+     */
     public void registerListener(NotifierListener listener) {
         List<Class<? extends NotifierEvent>> listeningEvents = new ArrayList<>();
 

@@ -1,5 +1,8 @@
 package io.mazenmc.notifier.packets;
 
+/**
+ * Packet notifying the client that there was an error logging in
+ */
 public class PacketLoginError extends Packet{
 
     private String reason;

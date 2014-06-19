@@ -1,5 +1,8 @@
 package io.mazenmc.notifier.packets;
 
+/**
+ * Packet which will be notifying the client that the server has been shutdown
+ */
 public class PacketServerShutdown extends Packet {
 
     private static final int id = 2;
