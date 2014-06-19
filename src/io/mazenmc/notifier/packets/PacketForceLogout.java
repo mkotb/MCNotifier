@@ -3,7 +3,7 @@ package io.mazenmc.notifier.packets;
 public class PacketForceLogout extends Packet{
 
     private String reason;
-    private static final int id = 0;
+    private static final int id = 5;
 
     public PacketForceLogout(String[] args) {
         StringBuilder sb = new StringBuilder("");
