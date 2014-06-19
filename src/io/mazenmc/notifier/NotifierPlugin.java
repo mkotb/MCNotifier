@@ -2,12 +2,14 @@ package io.mazenmc.notifier;
 
 import io.mazenmc.notifier.client.NotifierClient;
 import io.mazenmc.notifier.event.NotifierEventHandler;
+import io.mazenmc.notifier.event.NotifierListener;
 import io.mazenmc.notifier.packets.Packet;
 import io.mazenmc.notifier.packets.PacketServerShutdown;
 import io.mazenmc.notifier.server.NotifierServer;
 import io.mazenmc.notifier.util.ClassFinder;
 import io.mazenmc.notifier.util.SettingsManager;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -29,6 +31,13 @@ public class NotifierPlugin extends JavaPlugin {
         notifierEventHandler = new NotifierEventHandler();
         classFinder = new ClassFinder();
         Packet.registerAll();
+
+        try{
+            registerListeners();
+        }catch(Exception ex) {
+            getLogger().log(Level.SEVERE, "Unable to register listeners, disabling plugin..", ex);
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
 
         //Start the NotifierServer
         try {
@@ -64,5 +73,19 @@ public class NotifierPlugin extends JavaPlugin {
 
     public static ClassFinder getClassFinder() {
         return classFinder;
+    }
+
+    private void registerListeners() throws Exception{
+        for(Class<?> cls : getClassFinder().find("io.mazenmc.notifier.listeners.bukkit")) {
+            if(cls.isAssignableFrom(Listener.class)) {
+                getServer().getPluginManager().registerEvents(cls.asSubclass(Listener.class).getConstructor().newInstance(), plugin);
+            }
+        }
+
+        for(Class<?> cls : getClassFinder().find("io.mazenmc.notifier.listeners.notifier")) {
+            if(cls.isAssignableFrom(NotifierListener.class)) {
+                getEventHandler().registerListener(cls.asSubclass(NotifierListener.class).getConstructor().newInstance());
+            }
+        }
     }
 }
