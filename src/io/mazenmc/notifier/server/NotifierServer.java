@@ -1,5 +1,6 @@
 package io.mazenmc.notifier.server;
 
+import io.mazenmc.notifier.Notifier;
 import io.mazenmc.notifier.NotifierPlugin;
 import io.mazenmc.notifier.client.NotifierClient;
 import io.mazenmc.notifier.packets.PacketLoginError;
@@ -40,18 +41,18 @@ public class NotifierServer extends Thread{
                 char[] password = d[1].toCharArray();
 
                 if(!NotifierPlugin.getSettingsManager().getUserData().containsKey(username)) {
-                    oos.writeUTF(new PacketLoginError(new String[]{"Username/password is incorrect!"}).toString());
+                    oos.writeUTF(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect")).toString());
                     oos.flush();
                     continue;
                 }
 
                 if(!Arrays.equals(NotifierPlugin.getSettingsManager().getUserData().get(username), password)) {
-                    oos.writeUTF(new PacketLoginError(new String[]{"Username/password is incorrect!"}).toString());
+                    oos.writeUTF(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString());
                     oos.flush();
                     continue;
                 }
 
-                oos.writeUTF(new PacketLoginSuccess(null).toString());
+                oos.writeUTF(new PacketLoginSuccess(Notifier.emptyPacketArgs()).toString());
                 oos.flush();
 
                 new NotifierClient(socket, ois, oos, username);
