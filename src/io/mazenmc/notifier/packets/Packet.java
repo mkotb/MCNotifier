@@ -30,7 +30,7 @@ public abstract class Packet {
 
     public abstract void handle();
 
-    public static Class<?> getPacket(int id) {
-        return packets.get(id);
+    public static Class<? extends Packet> getPacket(int id) {
+        return packets.get(id).asSubclass(Packet.class);
     }
 }

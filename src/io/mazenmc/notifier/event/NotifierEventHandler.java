@@ -48,7 +48,7 @@ public class NotifierEventHandler {
 
         for(Method method : listener.getClass().getDeclaredMethods()) {
             if(method.getParameterTypes().length == 1 && method.getParameterTypes()[0].isAssignableFrom(NotifierEvent.class) && method.isAnnotationPresent(NotifierMethod.class)) {
-                listeningEvents.add((Class<? extends NotifierEvent>) method.getParameterTypes()[0]);
+                listeningEvents.add(method.getParameterTypes()[0].asSubclass(NotifierEvent.class));
             }
         }
 
