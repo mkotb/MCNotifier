@@ -18,6 +18,6 @@ public class PacketEncryptKey extends Packet{
 
     @Override
     public String toString() {
-        return 4 + " " + encryptionKey.toString();
+        return id + " " + encryptionKey.toString();
     }
 }

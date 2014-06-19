@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 import java.util.logging.Level;
 
-public class NotifierPlugin extends JavaPlugin{
+public class NotifierPlugin extends JavaPlugin {
 
     private static NotifierPlugin plugin;
     private static SettingsManager settingsManager;
