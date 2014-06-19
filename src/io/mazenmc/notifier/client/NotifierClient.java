@@ -1,9 +1,11 @@
 package io.mazenmc.notifier.client;
 
+import io.mazenmc.notifier.Notifier;
 import io.mazenmc.notifier.NotifierPlugin;
 import io.mazenmc.notifier.events.*;
 import io.mazenmc.notifier.packets.Packet;
 import io.mazenmc.notifier.packets.PacketEncryptKey;
+import io.mazenmc.notifier.packets.PacketForceLogout;
 import io.mazenmc.notifier.packets.PacketReceiveError;
 
 import java.io.*;
@@ -92,12 +94,19 @@ public class NotifierClient {
         NotifierPlugin.getEventHandler().callEvent(new ClientLoginEvent(this));
     }
 
+    public void logout() {
+        clients.remove(this);
+        clientThread.interrupt();
+
+        NotifierPlugin.getEventHandler().callEvent(new ClientLogoutEvent(this));
+    }
+
     public NotifierClient copy() {
         return this;
     }
 
-    public void performCommand(String command) {
-        //TODO: Finish this method
+    public void simulatePacket(Packet packet) {
+        getEventHandler().callEvent(new PacketReceiveEvent(packet.toString().split(" "), this));
     }
 
     public static NotifierClient getClient(String username) {
@@ -125,19 +134,21 @@ public class NotifierClient {
                 String rtn;
 
                 try{
-                    byte[] bytes = getInputStream().readUTF().getBytes();
+                    byte[] bytes = {};
+
+                    getInputStream().readFully(bytes);
 
                     rtn = decrypt(bytes, encryptionKey);
                 }catch(SocketTimeoutException ex) {
-                    clients.remove(copy());
-                    //TODO: Send logout packet
+                    logout();
+                    write(new PacketForceLogout(ex.getMessage().split(" ")));
                     break;
                 }catch(EOFException ex) {
-                    clients.remove(copy());
-                    //TODO: Send logout packet
+                    logout();
+                    write(new PacketForceLogout(ex.getMessage().split(" ")));
                     break;
                 }catch(Exception ex) {
-                    write(new PacketReceiveError(new String[] {ex.getMessage()}));
+                    write(new PacketReceiveError(ex.getMessage().split(" ")));
                     ex.printStackTrace();
                     continue;
                 }
