@@ -3,3 +3,7 @@ users:
 
 suspicious-commands:
 - '/op'
+
+suspicious-blocks:
+- lava
+- tnt

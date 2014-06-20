@@ -1,5 +1,7 @@
 package io.mazenmc.notifier.util;
 
+import org.bukkit.Material;
+
 import java.util.HashMap;
 
 public class SettingsManager {
@@ -30,5 +32,20 @@ public class SettingsManager {
      */
     public boolean isSuspiciousCommand(String command) {
         return config.getConfig().getStringList("suspicious-commands").contains(command);
+    }
+
+    /**
+     * Gets if the material provided is suspicious according to the configuration file
+     * @param material The material you wish to check
+     * @return If the material is suspicious or not
+     */
+    public boolean isBlockSuspicious(Material material)  {
+        for(String s : config.getConfig().getStringList("suspicious-blocks")) {
+            if(Material.matchMaterial(s) == material) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
