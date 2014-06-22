@@ -20,11 +20,17 @@ public class PacketClientLogout extends Packet{
 
     @Override
     public void handle() {
+        for(NotifierClient client : NotifierClient.getClients()) {
+            if(!client.getUsername().equals(client.getUsername())) {
+                client.write(this);
+            }
+        }
+
         client.logout();
     }
 
     @Override
     public String toString() {
-        return id + " ";
+        return id + " " + client.getUsername();
     }
 }
