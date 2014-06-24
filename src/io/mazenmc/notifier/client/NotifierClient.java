@@ -43,6 +43,7 @@ public class NotifierClient {
     private String username;
     private NotifierClientThread clientThread;
     private UUID encryptionKey;
+    private UUID initKey;
 
     /**
      * Constructor for a new NotifierClient
@@ -50,15 +51,17 @@ public class NotifierClient {
      * @param inputStream The input stream that will be used to communicate with the client
      * @param outputStream The output stream that will be used to communicate with the client
      * @param username The username that has been defined in the config.yml
+     *  @param initKey The key which has been generated at login
      * @throws IOException
      */
-    public NotifierClient(Socket socket, DataInputStream inputStream, DataOutputStream outputStream, String username) throws IOException {
+    public NotifierClient(Socket socket, DataInputStream inputStream, DataOutputStream outputStream, String username, UUID initKey) throws IOException {
         this.socket = socket;
         this.outputStream = outputStream;
         this.inputStream = inputStream;
         this.username = username;
         encryptionKey = UUID.randomUUID();
         clientThread = new NotifierClientThread();
+        this.initKey = initKey;
         login();
     }
 
@@ -108,17 +111,12 @@ public class NotifierClient {
         }
     }
 
-    /**
-     * Writes a packet without encryption
-     * @param packet The packet you wish to write to the client
-     */
-    @Deprecated
-    public void _INVALID_writeNoEncryption(Packet packet) {
+    private void writeInit(Packet packet) {
         try{
             getEventHandler().callEvent(new PacketSendEvent(packet));
-            outputStream.writeUTF(packet.toString());
+            outputStream.write(encrypt(packet.toString(), initKey));
             flush();
-        }catch(IOException ex) {
+        }catch(Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -147,7 +145,7 @@ public class NotifierClient {
      */
     public void login() {
         clients.add(this);
-        _INVALID_writeNoEncryption(new PacketEncryptKey(encryptionKey));
+        writeInit(new PacketEncryptKey(encryptionKey));
         clientThread.start();
         NotifierPlugin.getEventHandler().callEvent(new ClientLoginEvent(this));
     }
