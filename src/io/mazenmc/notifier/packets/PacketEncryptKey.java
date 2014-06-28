@@ -40,6 +40,10 @@ public class PacketEncryptKey extends Packet{
         return id;
     }
 
+    public UUID getKey() {
+        return encryptionKey;
+    }
+
     @Override
     public String toString() {
         return id + " " + encryptionKey.toString();
