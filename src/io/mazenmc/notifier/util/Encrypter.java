@@ -17,40 +17,82 @@
 
 package io.mazenmc.notifier.util;
 
-import javax.crypto.Cipher;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.AlgorithmParameters;
+import java.security.SecureRandom;
 import java.util.UUID;
 
 public final class Encrypter {
 
-    private final static String IV = "AAAAAAAAAAAAAAAA";
 
-    /**
-     * Encrypts the text provided with the key provided (key is required to decrypt)
-     * @param plainText The text you wish to encrypt
-     * @param encryptionKey The key you wish to use to encrypt the text
-     * @return Encrypted text
-     * @throws Exception
-     */
-    public static byte[] encrypt(String plainText, UUID encryptionKey) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding", "SunJCE");
-        SecretKeySpec key = new SecretKeySpec(encryptionKey.toString().getBytes("UTF-8"), "AES");
-        cipher.init(Cipher.ENCRYPT_MODE, key,new IvParameterSpec(IV.getBytes("UTF-8")));
+    private static String salt;
+    private static int pswdIterations = 65536 ;
+    private static int keySize = 256;
+    private static byte[] ivBytes;
+
+    public static byte[] encrypt(String plainText, UUID uuid) throws Exception {
+
+        String password = uuid.toString();
+        salt = generateSalt();
+        byte[] saltBytes = salt.getBytes("UTF-8");
+
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        PBEKeySpec spec = new PBEKeySpec(
+                password.toCharArray(),
+                saltBytes,
+                pswdIterations,
+                keySize
+        );
+
+        SecretKey secretKey = factory.generateSecret(spec);
+        SecretKeySpec secret = new SecretKeySpec(secretKey.getEncoded(), "AES");
+
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, secret);
+        AlgorithmParameters params = cipher.getParameters();
+        ivBytes = params.getParameterSpec(IvParameterSpec.class).getIV();
         return cipher.doFinal(plainText.getBytes("UTF-8"));
     }
 
-    /**
-     * Decrypts the bytes provided with the key provided
-     * @param cipherText The bytes you wish to decrypt
-     * @param encryptionKey The key you wish to use to decrypt the text
-     * @return Decrypted text
-     * @throws Exception
-     */
-    public static String decrypt(byte[] cipherText, UUID encryptionKey) throws Exception{
-        Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding", "SunJCE");
-        SecretKeySpec key = new SecretKeySpec(encryptionKey.toString().getBytes("UTF-8"), "AES");
-        cipher.init(Cipher.DECRYPT_MODE, key,new IvParameterSpec(IV.getBytes("UTF-8")));
-        return new String(cipher.doFinal(cipherText),"UTF-8");
+    public static String decrypt(byte[] encryptedTextBytes, UUID uuid) throws Exception {
+        String password = uuid.toString();
+
+        byte[] saltBytes = salt.getBytes("UTF-8");
+
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        PBEKeySpec spec = new PBEKeySpec(
+                password.toCharArray(),
+                saltBytes,
+                pswdIterations,
+                keySize
+        );
+
+        SecretKey secretKey = factory.generateSecret(spec);
+        SecretKeySpec secret = new SecretKeySpec(secretKey.getEncoded(), "AES");
+
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(ivBytes));
+
+
+        byte[] decryptedTextBytes;
+        try {
+            decryptedTextBytes = cipher.doFinal(encryptedTextBytes);
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return new String(decryptedTextBytes);
+    }
+
+    public static String generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte bytes[] = new byte[20];
+        random.nextBytes(bytes);
+        String s = new String(bytes);
+        return s;
     }
 }
