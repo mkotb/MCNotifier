@@ -30,7 +30,7 @@ public final class Encrypter {
 
     private static String salt;
     private static int pswdIterations = 65536 ;
-    private static int keySize = 256;
+    private static int keySize = 128;
     private static byte[] ivBytes;
 
     public static byte[] encrypt(String plainText, UUID uuid) throws Exception {
