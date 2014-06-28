@@ -17,6 +17,7 @@
 
 package io.mazenmc.notifier.client;
 
+import io.mazenmc.notifier.Notifier;
 import io.mazenmc.notifier.NotifierPlugin;
 import io.mazenmc.notifier.events.*;
 import io.mazenmc.notifier.packets.Packet;
@@ -145,7 +146,7 @@ public class NotifierClient {
      */
     public void login() {
         clients.add(this);
-        writeInit(new PacketEncryptKey(encryptionKey));
+        writeInit(new PacketEncryptKey(Notifier.generatePacketArgs(encryptionKey.toString())));
         clientThread.start();
         NotifierPlugin.getEventHandler().callEvent(new ClientLoginEvent(this));
     }

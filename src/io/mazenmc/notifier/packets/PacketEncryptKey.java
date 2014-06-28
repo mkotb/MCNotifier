@@ -27,8 +27,8 @@ public class PacketEncryptKey extends Packet{
     private UUID encryptionKey;
     private static final int id = 8;
 
-    public PacketEncryptKey(UUID encryptionKey) {
-        this.encryptionKey = encryptionKey;
+    public PacketEncryptKey(String[] args) {
+        this.encryptionKey = UUID.fromString(args[0]);
     }
 
     @Override
