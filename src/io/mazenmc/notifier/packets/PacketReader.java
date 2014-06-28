@@ -46,7 +46,7 @@ public class PacketReader {
         }
 
         try{
-            return Packet.getPacket(id).getConstructor(String[].class).newInstance((String[]) args);
+            return Packet.getPacket(id).getConstructor(String[].class).newInstance(new Object[] {args} );
         }catch(NullPointerException ex) {
             throw new IllegalArgumentException("ID " + id + " is not associated with a packet!");
         }catch(Exception ex) {
