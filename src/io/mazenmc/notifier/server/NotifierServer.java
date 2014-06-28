@@ -35,7 +35,7 @@ import static io.mazenmc.notifier.util.Encrypter.*;
 
 public class NotifierServer extends Thread{
 
-    private ServerSocket server;
+    private static ServerSocket server;
 
     public NotifierServer() throws IOException {
         server = new ServerSocket(5932);
@@ -70,7 +70,7 @@ public class NotifierServer extends Thread{
                 }catch(Exception ex) {
                     try{
                         oos.write(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Unable to decrypt login information!")).toString(), initKey));
-                    }catch(Exception ignored) {}
+                    }catch(Exception e) {e.printStackTrace();}
 
                     continue;
                 }

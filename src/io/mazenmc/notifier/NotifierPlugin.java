@@ -30,6 +30,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.ServerSocket;
 import java.util.logging.Level;
 
 public class NotifierPlugin extends JavaPlugin {
@@ -75,6 +77,18 @@ public class NotifierPlugin extends JavaPlugin {
         //Notify clients of server shutdown
         for(NotifierClient client : NotifierClient.getClients()) {
             client.write(new PacketServerShutdown(null));
+        }
+
+        //Shut down the NotifierServer in-case of reloading
+        try{
+            Field field = NotifierServer.class.getField("server");
+            field.setAccessible(true);
+
+            ((ServerSocket) field.get(null)).close();
+        }catch(Exception ex) {
+            ex.printStackTrace();
+            log("Unable to shutdown the NotifierServer, shutting down..");
+            Bukkit.shutdown();
         }
 
         //Avoiding any memory leaks..
@@ -132,5 +146,9 @@ public class NotifierPlugin extends JavaPlugin {
                 getEventHandler().registerListener(cls.asSubclass(NotifierListener.class).getConstructor().newInstance());
             }
         }
+    }
+
+    public static void log(String message) {
+        getPlugin().getLogger().info(message);
     }
 }
