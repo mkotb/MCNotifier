@@ -46,6 +46,10 @@ public class PacketClientLogout extends Packet{
         client.logout();
     }
 
+    public static int getID() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return id + " " + client.getUsername();

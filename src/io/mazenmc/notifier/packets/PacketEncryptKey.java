@@ -36,6 +36,10 @@ public class PacketEncryptKey extends Packet{
         //
     }
 
+    public static int getID() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return id + " " + encryptionKey.toString();

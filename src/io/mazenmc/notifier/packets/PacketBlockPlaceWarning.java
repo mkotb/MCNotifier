@@ -41,6 +41,10 @@ public class PacketBlockPlaceWarning extends Packet{
         //No handling here..
     }
 
+    public static int getID() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return id + " " + username + " " + block;

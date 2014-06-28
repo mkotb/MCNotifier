@@ -41,6 +41,10 @@ public class PacketReceiveError extends Packet{
         //
     }
 
+    public static int getID() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return id + " " + reason;
