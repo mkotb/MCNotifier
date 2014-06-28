@@ -20,6 +20,7 @@ package io.mazenmc.notifier.packets;
 import io.mazenmc.notifier.NotifierPlugin;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,11 +36,8 @@ public abstract class Packet {
             Class<?> cls = lcs.get(i);
             if(!cls.getName().equals("Packet") && !cls.getName().equals("PacketReader")) {
                 try{
-                    Field field = cls.getField("id");
-                    field.setAccessible(true);
-
-                    packets.put((int) field.get(null), cls);
-                }catch(NoSuchFieldException | IllegalAccessException ignored) {
+                    packets.put((int) cls.getDeclaredMethod("getID").invoke(null), cls);
+                }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
                     packets.put(i, cls);
                 }
             }
