@@ -62,7 +62,6 @@ public class NotifierServer extends Thread{
 
                 try{
                     d = decrypt(ois.readUTF(), initKey).split(":");
-                    log(d[0]);
                 }catch(Exception ex) {
                     try{
                         oos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Unable to decrypt login information!")).toString(), initKey));
