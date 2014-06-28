@@ -104,7 +104,7 @@ public class NotifierClient {
     public void write(Packet packet) {
         try{
             getEventHandler().callEvent(new PacketSendEvent(packet));
-            outputStream.write(encrypt(packet.toString(), encryptionKey));
+            outputStream.writeUTF(encrypt(packet.toString(), encryptionKey));
             flush();
         }catch(Exception ex) {
             ex.printStackTrace();
@@ -114,7 +114,7 @@ public class NotifierClient {
     private void writeInit(Packet packet) {
         try{
             getEventHandler().callEvent(new PacketSendEvent(packet));
-            outputStream.write(encrypt(packet.toString(), initKey));
+            outputStream.writeUTF(encrypt(packet.toString(), initKey));
             flush();
         }catch(Exception ex) {
             ex.printStackTrace();
@@ -215,11 +215,7 @@ public class NotifierClient {
                 String rtn;
 
                 try{
-                    byte[] bytes = {};
-
-                    getInputStream().readFully(bytes);
-
-                    rtn = decrypt(bytes, encryptionKey);
+                    rtn = decrypt(getInputStream().readUTF(), encryptionKey);
                 }catch(SocketTimeoutException ex) {
                     logout();
                     write(new PacketForceLogout(ex.getMessage().split(" ")));

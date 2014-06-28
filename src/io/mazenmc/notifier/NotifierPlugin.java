@@ -41,6 +41,7 @@ public class NotifierPlugin extends JavaPlugin {
     private static SettingsManager settingsManager;
     private static NotifierEventHandler notifierEventHandler;
     private static ClassFinder classFinder;
+    private NotifierServer server;
 
     @Override
     public void onEnable() {
@@ -64,7 +65,8 @@ public class NotifierPlugin extends JavaPlugin {
 
         //Start the NotifierServer
         try {
-            new NotifierServer().start();
+            server = new NotifierServer();
+            server.start();
         }catch(IOException ex) {
             getLogger().log(Level.SEVERE, "Unable to start NotifierServer!", ex);
             getLogger().info("Disabling plugin..");
@@ -81,10 +83,7 @@ public class NotifierPlugin extends JavaPlugin {
 
         //Shut down the NotifierServer in-case of reloading
         try{
-            Field field = NotifierServer.class.getField("server");
-            field.setAccessible(true);
-
-            ((ServerSocket) field.get(null)).close();
+            server.close();
         }catch(Exception ex) {
             ex.printStackTrace();
             log("Unable to shutdown the NotifierServer, shutting down..");

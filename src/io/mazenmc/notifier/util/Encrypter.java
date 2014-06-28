@@ -23,11 +23,11 @@ import java.util.UUID;
 public final class Encrypter {
 
 
-    public static byte[] encrypt(String plainText, UUID uuid) throws Exception {
-        return plainText.getBytes(Charset.forName("UTF-8"));
+    public static String encrypt(String plainText, UUID uuid) throws Exception {
+        return new String(plainText.getBytes(Charset.forName("UTF-8")));
     }
 
-    public static String decrypt(byte[] encryptedTextBytes, UUID uuid) throws Exception {
-        return new String(encryptedTextBytes);
+    public static String decrypt(String encryptedTextBytes, UUID uuid) throws Exception {
+        return encryptedTextBytes;
     }
 }
