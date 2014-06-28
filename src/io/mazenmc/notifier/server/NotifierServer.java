@@ -93,7 +93,7 @@ public class NotifierServer extends Thread{
                 oos.write(encrypt(new PacketLoginSuccess(Notifier.emptyPacketArgs()).toString(), initKey));
                 oos.flush();
 
-                new NotifierClient(socket, ois, oos, username);
+                new NotifierClient(socket, ois, oos, username, initKey);
 
                 NotifierPlugin.getPlugin().getLogger().info(username + " has logged in!");
             }catch(SocketTimeoutException ex) {
