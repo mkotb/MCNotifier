@@ -29,7 +29,6 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import static io.mazenmc.notifier.util.Encrypter.*;
 
@@ -72,6 +71,8 @@ public class NotifierServer extends Thread{
                         oos.write(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Unable to decrypt login information!")).toString(), initKey));
                     }catch(Exception e) {e.printStackTrace();}
 
+                    ex.printStackTrace();
+
                     continue;
                 }
 
@@ -98,8 +99,6 @@ public class NotifierServer extends Thread{
                 NotifierPlugin.getPlugin().getLogger().info(username + " has logged in!");
             }catch(SocketTimeoutException ex) {
                 try{
-                    server.close();
-
                     server = new ServerSocket(5932);
                     server.setSoTimeout(Integer.MAX_VALUE);
                 }catch(Exception e) {e.printStackTrace();}

@@ -60,6 +60,7 @@ public final class Encrypter {
     public static String decrypt(byte[] encryptedTextBytes, UUID uuid) throws Exception {
         String password = uuid.toString();
 
+        salt = generateSalt();
         byte[] saltBytes = salt.getBytes("UTF-8");
 
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
