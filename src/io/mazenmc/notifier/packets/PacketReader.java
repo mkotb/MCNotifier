@@ -47,8 +47,11 @@ public class PacketReader {
 
         try{
             return Packet.getPacket(id).getConstructor(String[].class).newInstance((String[]) args);
-        }catch(Exception ex) {
+        }catch(NullPointerException ex) {
             throw new IllegalArgumentException("ID " + id + " is not associated with a packet!");
+        }catch(Exception ex) {
+            ex.printStackTrace();
+            return null;
         }
     }
 }

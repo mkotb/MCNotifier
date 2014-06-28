@@ -34,7 +34,7 @@ public abstract class Packet {
 
         for(int i = 0; i < lcs.size(); i++) {
             Class<?> cls = lcs.get(i);
-            if(!cls.getName().equals("Packet") && !cls.getName().equals("PacketReader")) {
+            if(!cls.getName().equals("io.mazenmc.notifier.packets.Packet") && !cls.getName().equals("io.mazenmc.notifier.packets.PacketReader")) {
                 try{
                     packets.put((int) cls.getDeclaredMethod("getID").invoke(null), cls);
                 }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
