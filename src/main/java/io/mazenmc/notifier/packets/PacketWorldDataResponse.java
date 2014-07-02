@@ -1,6 +1,5 @@
 package io.mazenmc.notifier.packets;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
