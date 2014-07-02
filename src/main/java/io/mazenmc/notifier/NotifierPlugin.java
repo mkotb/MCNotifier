@@ -20,6 +20,7 @@ package io.mazenmc.notifier;
 import io.mazenmc.notifier.client.NotifierClient;
 import io.mazenmc.notifier.event.NotifierEventHandler;
 import io.mazenmc.notifier.event.NotifierListener;
+import io.mazenmc.notifier.listeners.ExceptionListener;
 import io.mazenmc.notifier.packets.Packet;
 import io.mazenmc.notifier.packets.PacketServerShutdown;
 import io.mazenmc.notifier.server.NotifierServer;
@@ -28,6 +29,7 @@ import io.mazenmc.notifier.util.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -72,6 +74,18 @@ public class NotifierPlugin extends JavaPlugin {
             getLogger().info("Disabling plugin..");
             Bukkit.getPluginManager().disablePlugin(this);
         }
+
+        //Register all the plugins in the exception listener in 30 seconds
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try{
+                    ExceptionListener.register();
+                }catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }.runTaskLater(this, 600L);
     }
 
     @Override
