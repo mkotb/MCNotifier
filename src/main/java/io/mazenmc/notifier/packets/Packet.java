@@ -19,7 +19,6 @@ package io.mazenmc.notifier.packets;
 
 import io.mazenmc.notifier.NotifierPlugin;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +44,9 @@ public abstract class Packet {
     }
 
     public abstract void handle();
+
+    @Override
+    public abstract String toString();
 
     public static Class<? extends Packet> getPacket(int id) {
         return packets.get(id).asSubclass(Packet.class);
