@@ -10,24 +10,24 @@ public class PacketSetPlayerHunger extends Packet{
 
     private static final int id = 14;
     private String name;
-    private int health;
+    private int hunger;
 
     public PacketSetPlayerHunger(String[] args) {
         name = args[0];
-        health = Integer.parseInt(args[1]);
+        hunger = Integer.parseInt(args[1]);
     }
 
     public String getName() {
         return name;
     }
 
-    public double getHealth() {
-        return health;
+    public double getHunger() {
+        return hunger;
     }
 
     @Override
     public String toString() {
-        return id + SPLITTER + name + SPLITTER + health;
+        return id + SPLITTER + name + SPLITTER + hunger;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class PacketSetPlayerHunger extends Packet{
         Player player = Bukkit.getPlayer(name);
 
         if(player != null) {
-            player.setFoodLevel(health);
+            player.setFoodLevel(hunger);
         }
     }
 
