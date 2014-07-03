@@ -29,6 +29,6 @@ public class PacketPlayerDataRequest extends Packet{
     }
 
     public String toString() {
-        return id + " " + player.getName();
+        return id + Packet.SPLITTER + player.getName();
     }
 }

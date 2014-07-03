@@ -52,6 +52,6 @@ public class PacketClientLogout extends Packet{
 
     @Override
     public String toString() {
-        return id + " " + client.getUsername();
+        return id + Packet.SPLITTER + client.getUsername();
     }
 }

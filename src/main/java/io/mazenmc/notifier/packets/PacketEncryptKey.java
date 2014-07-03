@@ -46,6 +46,6 @@ public class PacketEncryptKey extends Packet{
 
     @Override
     public String toString() {
-        return id + " " + encryptionKey.toString();
+        return id + Packet.SPLITTER + encryptionKey.toString();
     }
 }

@@ -47,7 +47,7 @@ public class PacketForceLogout extends Packet{
 
     @Override
     public String toString() {
-        return id + " " + reason;
+        return id + Packet.SPLITTER + reason;
     }
 
     public static int getID() {

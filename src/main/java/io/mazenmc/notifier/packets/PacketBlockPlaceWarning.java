@@ -47,6 +47,6 @@ public class PacketBlockPlaceWarning extends Packet{
 
     @Override
     public String toString() {
-        return id + " " + username + " " + block;
+        return id + Packet.SPLITTER + username + Packet.SPLITTER + block;
     }
 }

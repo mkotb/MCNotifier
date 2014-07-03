@@ -47,6 +47,6 @@ public class PacketReceiveError extends Packet{
 
     @Override
     public String toString() {
-        return id + " " + reason;
+        return id + Packet.SPLITTER + reason;
     }
 }

@@ -26,7 +26,7 @@ import java.util.List;
 public abstract class Packet {
 
     private static HashMap<Integer, Class<?>> packets = new HashMap<>();
-    public static final char SPLITTER = ' ';
+    public static final String SPLITTER = "≰";
 
     public static void registerAll() {
         List<Class<?>> lcs = NotifierPlugin.getClassFinder().find("io.mazenmc.notifier.packets");

@@ -37,6 +37,6 @@ public class PacketServerShutdown extends Packet {
 
     @Override
     public String toString() {
-        return id + " ";
+        return id + Packet.SPLITTER;
     }
 }

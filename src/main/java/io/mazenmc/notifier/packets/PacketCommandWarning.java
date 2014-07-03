@@ -42,6 +42,6 @@ public class PacketCommandWarning extends Packet{
 
     @Override
     public String toString() {
-        return id + " " + playerName + " " + command;
+        return id + Packet.SPLITTER + playerName + Packet.SPLITTER + command;
     }
 }

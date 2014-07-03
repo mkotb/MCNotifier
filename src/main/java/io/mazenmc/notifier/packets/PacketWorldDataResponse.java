@@ -74,17 +74,17 @@ public class PacketWorldDataResponse extends Packet{
         StringBuilder sb = new StringBuilder("");
 
         sb.append(id);
-        sb.append(" ");
+        sb.append(Packet.SPLITTER);
         sb.append(entityCount);
-        sb.append(" ");
+        sb.append(Packet.SPLITTER);
         sb.append(entityMax);
-        sb.append(" ");
+        sb.append(Packet.SPLITTER);
         sb.append(difficulty);
-        sb.append(" ");
+        sb.append(Packet.SPLITTER);
         sb.append(time);
-        sb.append(" ");
+        sb.append(Packet.SPLITTER);
         sb.append(worldType);
-        sb.append(" ");
+        sb.append(Packet.SPLITTER);
 
         StringBuilder playerBuilder = new StringBuilder("");
         for(Player player : players) {

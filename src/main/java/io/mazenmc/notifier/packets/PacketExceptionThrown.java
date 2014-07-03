@@ -32,6 +32,6 @@ public class PacketExceptionThrown extends Packet{
 
     @Override
     public String toString() {
-        return id + " " + pluginName + " " + exceptionName + " " + exceptionMessage.replaceAll(" ", "_");
+        return id + Packet.SPLITTER + pluginName + Packet.SPLITTER + exceptionName + Packet.SPLITTER + exceptionMessage.replaceAll(" ", "_");
     }
 }

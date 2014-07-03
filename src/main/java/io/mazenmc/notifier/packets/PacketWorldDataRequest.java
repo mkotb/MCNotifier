@@ -29,6 +29,6 @@ public class PacketWorldDataRequest extends Packet{
     }
 
     public String toString() {
-        return id + " " + world;
+        return id + Packet.SPLITTER + world;
     }
 }

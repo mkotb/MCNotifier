@@ -55,6 +55,6 @@ public class PacketPlayerSwear extends Packet{
 
     @Override
     public String toString() {
-        return id + " " + swear + " " + message;
+        return id + Packet.SPLITTER + swear + Packet.SPLITTER + message;
     }
 }

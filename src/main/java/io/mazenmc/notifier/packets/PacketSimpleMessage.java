@@ -22,6 +22,6 @@ public class PacketSimpleMessage extends Packet {
 
     @Override
     public String toString() {
-        return id + " " + sender.getName() + " " + message;
+        return id + Packet.SPLITTER + sender.getName() + Packet.SPLITTER + message;
     }
 }

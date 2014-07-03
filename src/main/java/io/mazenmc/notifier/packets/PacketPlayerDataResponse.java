@@ -8,9 +8,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.net.InetSocketAddress;
 
-/**
- * Created by mazen on 7/3/14.
- */
 public class PacketPlayerDataResponse extends Packet{
 
     private static final int id = 11;
@@ -70,6 +67,6 @@ public class PacketPlayerDataResponse extends Packet{
 
     @Override
     public String toString() {
-        return id + " " + health + " " + StringUtils.capitalize(itemInHand.getType().toString()) + " " + foodLevel + " " + world.getName() + " " + getIP();
+        return id + Packet.SPLITTER + health + Packet.SPLITTER + StringUtils.capitalize(itemInHand.getType().toString()) + Packet.SPLITTER + foodLevel + Packet.SPLITTER + world.getName() + Packet.SPLITTER + getIP();
     }
 }

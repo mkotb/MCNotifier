@@ -174,7 +174,7 @@ public class NotifierClient {
      * @param packet The packet you wish to simulate
      */
     public void simulatePacket(Packet packet) {
-        getEventHandler().callEvent(new PacketReceiveEvent(packet.toString().split(" "), this));
+        getEventHandler().callEvent(new PacketReceiveEvent(packet.toString().split(Packet.SPLITTER), this));
     }
 
     /**
@@ -219,19 +219,19 @@ public class NotifierClient {
                     rtn = decrypt(getInputStream().readUTF(), encryptionKey);
                 }catch(SocketTimeoutException ex) {
                     logout();
-                    write(new PacketForceLogout(ex.getMessage().split(" ")));
+                    write(new PacketForceLogout(ex.getMessage().split(Packet.SPLITTER)));
                     break;
                 }catch(EOFException ex) {
                     logout();
-                    write(new PacketForceLogout(ex.getMessage().split(" ")));
+                    write(new PacketForceLogout(ex.getMessage().split(Packet.SPLITTER)));
                     break;
                 }catch(Exception ex) {
-                    write(new PacketReceiveError(ex.getMessage().split(" ")));
+                    write(new PacketReceiveError(ex.getMessage().split(Packet.SPLITTER)));
                     ex.printStackTrace();
                     continue;
                 }
 
-                getEventHandler().callEvent(new PacketReceiveEvent(rtn.split(" "), copy()));
+                getEventHandler().callEvent(new PacketReceiveEvent(rtn.split(Packet.SPLITTER), copy()));
             }
         }
     }
