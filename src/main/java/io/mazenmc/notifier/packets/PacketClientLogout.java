@@ -37,6 +37,10 @@ public class PacketClientLogout extends Packet{
 
     @Override
     public void handle() {
+        if(client == null) {
+            return;
+        }
+
         for(NotifierClient client : NotifierClient.getClients()) {
             if(!client.getUsername().equals(client.getUsername())) {
                 client.write(this);
