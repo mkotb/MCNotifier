@@ -1,5 +1,6 @@
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -29,6 +30,6 @@ public class PacketPlayerDataRequest extends Packet{
     }
 
     public String toString() {
-        return id + Packet.SPLITTER + player.getName();
+        return Notifier.buildString(id, SPLITTER, player.getName());
     }
 }

@@ -17,6 +17,8 @@
 
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
+
 /**
  * Packet which will be notifying the client that the server has been shutdown
  */
@@ -37,6 +39,6 @@ public class PacketServerShutdown extends Packet {
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER;
+        return Notifier.buildString(id);
     }
 }

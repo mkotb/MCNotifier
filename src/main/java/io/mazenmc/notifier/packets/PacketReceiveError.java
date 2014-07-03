@@ -17,6 +17,8 @@
 
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
+
 /**
  * Packet which will be notifying the client that there was an error reading his sent packet
  */
@@ -47,6 +49,6 @@ public class PacketReceiveError extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + reason;
+        return Notifier.buildString(id, SPLITTER, reason);
     }
 }

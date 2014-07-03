@@ -1,5 +1,6 @@
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -28,7 +29,7 @@ public class PacketSetPlayerVelocity extends Packet{
 
     @Override
     public String toString() {
-        return id + SPLITTER + name + SPLITTER + vector.getX() + SPLITTER + vector.getY() + SPLITTER + vector.getZ();
+        return Notifier.buildString(id, SPLITTER, name, SPLITTER, vector.getX(), SPLITTER, vector.getY(), SPLITTER, vector.getZ());
     }
 
     @Override

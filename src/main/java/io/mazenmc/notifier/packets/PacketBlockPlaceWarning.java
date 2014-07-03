@@ -17,6 +17,8 @@
 
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
+
 public class PacketBlockPlaceWarning extends Packet{
 
     private static final int id = 7;
@@ -47,6 +49,6 @@ public class PacketBlockPlaceWarning extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + username + Packet.SPLITTER + block;
+        return Notifier.buildString(id, SPLITTER, username, SPLITTER, block);
     }
 }

@@ -17,6 +17,8 @@
 
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
+
 /**
  * Packet notifying the client that there was an error logging in
  */
@@ -47,7 +49,7 @@ public class PacketLoginError extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + reason;
+        return Notifier.buildString(id, SPLITTER, reason);
     }
 
     public static int getID() {

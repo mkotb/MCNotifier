@@ -1,5 +1,6 @@
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -67,6 +68,6 @@ public class PacketPlayerDataResponse extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + health + Packet.SPLITTER + StringUtils.capitalize(itemInHand.getType().toString()) + Packet.SPLITTER + foodLevel + Packet.SPLITTER + world.getName() + Packet.SPLITTER + getIP();
+        return Notifier.buildString(id, SPLITTER, health, SPLITTER, StringUtils.capitalize(itemInHand.getType().toString()), SPLITTER, foodLevel, SPLITTER, world.getName(), SPLITTER, getIP());
     }
 }

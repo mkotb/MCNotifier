@@ -1,5 +1,6 @@
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -29,6 +30,6 @@ public class PacketWorldDataRequest extends Packet{
     }
 
     public String toString() {
-        return id + Packet.SPLITTER + world;
+        return Notifier.buildString(id, SPLITTER, world.getName());
     }
 }

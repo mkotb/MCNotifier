@@ -17,6 +17,7 @@
 
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
 import io.mazenmc.notifier.client.NotifierClient;
 
 /**
@@ -56,6 +57,6 @@ public class PacketClientLogout extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + client.getUsername();
+        return Notifier.buildString(id, SPLITTER, client.getUsername());
     }
 }

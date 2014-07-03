@@ -17,6 +17,8 @@
 
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
+
 /**
  * Packet notifying the client that they have been forced logged out by the server
  */
@@ -47,7 +49,7 @@ public class PacketForceLogout extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + reason;
+        return Notifier.buildString(id, SPLITTER, reason);
     }
 
     public static int getID() {

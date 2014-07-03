@@ -17,6 +17,8 @@
 
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
+
 /**
  * Packet sent when player ran a suspicious command
  */
@@ -42,6 +44,6 @@ public class PacketCommandWarning extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + playerName + Packet.SPLITTER + command;
+        return Notifier.buildString(id, SPLITTER, playerName, SPLITTER, command);
     }
 }

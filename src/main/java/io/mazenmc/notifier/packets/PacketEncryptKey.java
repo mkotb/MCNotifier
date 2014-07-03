@@ -17,6 +17,8 @@
 
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
+
 import java.util.UUID;
 
 /**
@@ -46,6 +48,6 @@ public class PacketEncryptKey extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + encryptionKey.toString();
+        return Notifier.buildString(id, SPLITTER, encryptionKey.toString());
     }
 }

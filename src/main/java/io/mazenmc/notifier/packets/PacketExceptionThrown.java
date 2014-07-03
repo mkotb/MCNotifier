@@ -1,5 +1,7 @@
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
+
 public class PacketExceptionThrown extends Packet{
 
     private static final int id = 10;
@@ -32,6 +34,6 @@ public class PacketExceptionThrown extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + pluginName + Packet.SPLITTER + exceptionName + Packet.SPLITTER + exceptionMessage.replaceAll(" ", "_");
+        return Notifier.buildString(id, SPLITTER, pluginName, SPLITTER, exceptionMessage, SPLITTER, exceptionMessage.replace(" ", "_"));
     }
 }

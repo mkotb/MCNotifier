@@ -17,6 +17,8 @@
 
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
+
 public class PacketPlayerSwear extends Packet{
 
     private static final int id = 7;
@@ -55,6 +57,6 @@ public class PacketPlayerSwear extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + swear + Packet.SPLITTER + message;
+        return Notifier.buildString(id, SPLITTER, swear, SPLITTER, message);
     }
 }

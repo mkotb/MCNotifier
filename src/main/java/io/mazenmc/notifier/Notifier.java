@@ -67,6 +67,20 @@ public class Notifier {
     }
 
     /**
+     * Build a string
+     * @return Built string
+     */
+    public static String buildString(Object... objects) {
+        StringBuilder sb = new StringBuilder("");
+
+        for(Object obj : objects) {
+            sb.append(obj);
+        }
+
+        return sb.toString();
+    }
+
+    /**
      * Gets SettingsManager instance from NotifierPlugin
      * @return SettingManagers instance
      */

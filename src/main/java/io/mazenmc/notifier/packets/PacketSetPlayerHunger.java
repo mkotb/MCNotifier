@@ -1,5 +1,6 @@
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -27,7 +28,7 @@ public class PacketSetPlayerHunger extends Packet{
 
     @Override
     public String toString() {
-        return id + SPLITTER + name + SPLITTER + hunger;
+        return Notifier.buildString(id, SPLITTER, name, SPLITTER, hunger);
     }
 
     @Override
