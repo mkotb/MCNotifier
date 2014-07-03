@@ -1,16 +1,12 @@
 package io.mazenmc.notifier.packets;
 
-import org.bukkit.entity.Player;
-
 public class PacketSimpleMessage extends Packet {
 
     private static final int id = 12;
     private String message;
-    private Player sender;
 
-    public PacketSimpleMessage(String message, Player sender) {
+    public PacketSimpleMessage(String message) {
         this.message = message;
-        this.sender = sender;
     }
 
     public static int getID() {
@@ -22,6 +18,6 @@ public class PacketSimpleMessage extends Packet {
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + sender.getName() + Packet.SPLITTER + message;
+        return id + Packet.SPLITTER + Packet.SPLITTER + message;
     }
 }
