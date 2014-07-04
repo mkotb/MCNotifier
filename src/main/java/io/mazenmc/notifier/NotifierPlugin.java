@@ -26,14 +26,14 @@ import io.mazenmc.notifier.packets.PacketServerShutdown;
 import io.mazenmc.notifier.server.NotifierServer;
 import io.mazenmc.notifier.util.ClassFinder;
 import io.mazenmc.notifier.util.SettingsManager;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.ServerSocket;
 import java.util.logging.Level;
 
 public class NotifierPlugin extends JavaPlugin {
@@ -43,7 +43,10 @@ public class NotifierPlugin extends JavaPlugin {
     private static SettingsManager settingsManager;
     private static NotifierEventHandler notifierEventHandler;
     private static ClassFinder classFinder;
+    private static Permission permission;
     private NotifierServer server;
+
+    private static boolean vaultFound = false;
 
     @Override
     public void onEnable() {
@@ -86,6 +89,9 @@ public class NotifierPlugin extends JavaPlugin {
                 }
             }
         }.runTaskLater(this, 600L);
+        //Look for Vault
+        if(setupPermissions())
+            vaultFound = true;
     }
 
     @Override
@@ -161,7 +167,19 @@ public class NotifierPlugin extends JavaPlugin {
         }
     }
 
+    public static boolean vaultDetected() {
+        return vaultFound;
+    }
+
     public static void log(String message) {
         getPlugin().getLogger().info(message);
+    }
+    private boolean setupPermissions()
+    {
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+        }
+        return (permission != null);
     }
 }

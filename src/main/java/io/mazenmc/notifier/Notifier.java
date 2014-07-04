@@ -87,4 +87,8 @@ public class Notifier {
     public static SettingsManager getSettingsManager() {
         return NotifierPlugin.getSettingsManager();
     }
+
+    public static boolean vaultDetected() {
+        return NotifierPlugin.vaultDetected();
+    }
 }
