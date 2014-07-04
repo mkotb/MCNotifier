@@ -1,30 +1,31 @@
 package io.mazenmc.notifier.packets;
 
 import io.mazenmc.notifier.Notifier;
+import io.mazenmc.notifier.NotifierPlugin;
 import org.bukkit.entity.Player;
 
 public class PacketPermissionRequest extends Packet{
 
     private static final int id = 15;
     private String permission;
-    private Player permRequestor;
+    private Player permRequester;
 
-    public PacketPermissionRequest(String permission, Player permRequestor) throws Exception {
+    public PacketPermissionRequest(String permission, Player permRequester) {
         if(!Notifier.vaultDetected()) {
-            throw new Exception("Vault was not detected. Make sure Vault is enabled to utilize this feature.");
+            throw new IllegalStateException("Vault was not detected. Make sure Vault is enabled to utilize this feature.");
         }
         this.permission = permission;
-        this.permRequestor = permRequestor;
+        this.permRequester = permRequester;
     }
 
     @Override
     public void handle() {
-
+        NotifierPlugin.getPermission().playerAdd(permRequester, permission);
     }
 
     @Override
     public String toString() {
-        return Notifier.buildString(id, SPLITTER, permRequestor.getName(), SPLITTER, permission);
+        return Notifier.buildString(id, SPLITTER, permRequester.getName(), SPLITTER, permission);
     }
 
     public static int getID() {
