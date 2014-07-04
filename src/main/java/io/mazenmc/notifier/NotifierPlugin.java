@@ -171,6 +171,10 @@ public class NotifierPlugin extends JavaPlugin {
         return vaultFound;
     }
 
+    public static Permission getPermission() {
+        return permission;
+    }
+
     public static void log(String message) {
         getPlugin().getLogger().info(message);
     }
