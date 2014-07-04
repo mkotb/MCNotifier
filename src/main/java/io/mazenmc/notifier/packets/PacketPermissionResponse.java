@@ -2,7 +2,7 @@ package io.mazenmc.notifier.packets;
 
 public class PacketPermissionResponse extends Packet {
 
-    private static final int id = 15;
+    private static final int id = 16;
     private String player;
     private String permission;
     private Long timeout;
