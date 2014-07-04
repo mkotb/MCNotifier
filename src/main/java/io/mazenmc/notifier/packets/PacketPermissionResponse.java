@@ -1,8 +1,5 @@
 package io.mazenmc.notifier.packets;
 
-/**
- * Created by Nafi on 3/07/2014.
- */
 public class PacketPermissionResponse extends Packet {
 
     private static final int id = 15;

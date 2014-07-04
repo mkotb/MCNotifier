@@ -3,9 +3,6 @@ package io.mazenmc.notifier.packets;
 import io.mazenmc.notifier.Notifier;
 import org.bukkit.entity.Player;
 
-/**
- * Created by Nafi on 3/07/2014.
- */
 public class PacketPermissionRequest extends Packet{
 
     private static final int id = 15;
