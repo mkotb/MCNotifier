@@ -24,7 +24,7 @@ public class PacketPermissionRequest extends Packet{
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + permRequestor.getName() + Packet.SPLITTER + permission;
+        return Notifier.buildString(id, SPLITTER, permRequestor.getName(), SPLITTER, permission);
     }
 
     public static int getID() {

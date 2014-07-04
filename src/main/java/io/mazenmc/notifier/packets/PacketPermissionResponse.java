@@ -1,5 +1,7 @@
 package io.mazenmc.notifier.packets;
 
+import io.mazenmc.notifier.Notifier;
+
 public class PacketPermissionResponse extends Packet {
 
     private static final int id = 16;
@@ -20,7 +22,7 @@ public class PacketPermissionResponse extends Packet {
 
     @Override
     public String toString() {
-        return id + Packet.SPLITTER + player + Packet.SPLITTER + permission;
+        return Notifier.buildString(id, SPLITTER, player, SPLITTER, permission, SPLITTER, timeout);
     }
 
     public static int getID() {
