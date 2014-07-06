@@ -44,7 +44,7 @@ public class NotifierPlugin extends JavaPlugin {
     private static NotifierEventHandler notifierEventHandler;
     private static ClassFinder classFinder;
     private static Permission permission;
-    private NotifierServer server;
+    private static NotifierServer server;
 
     private static boolean vaultFound = false;
 
@@ -167,19 +167,39 @@ public class NotifierPlugin extends JavaPlugin {
         }
     }
 
+    /**
+     * Returns if vault is found
+     * @return If vault is found
+     */
     public static boolean vaultDetected() {
         return vaultFound;
     }
 
+    /**
+     * Gets the permission registration from vault
+     * @return Permission registration from vault
+     */
     public static Permission getPermission() {
         return permission;
     }
 
+    /**
+     * Logs the message provided
+     * @param message Message you wish to log
+     */
     public static void log(String message) {
         getPlugin().getLogger().info(message);
     }
-    private boolean setupPermissions()
-    {
+
+    /**
+     * Gets the NotifierServer instance
+     * @return NotifierServer instance
+     */
+    public static NotifierServer getNotifierServer() {
+        return server;
+    }
+
+    private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
         if (permissionProvider != null) {
             permission = permissionProvider.getProvider();

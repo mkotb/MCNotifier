@@ -52,19 +52,20 @@ public class NotifierServer extends Thread{
             try{
                 socket = server.accept();
 
-                DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
-                DataInputStream ois = new DataInputStream(socket.getInputStream());
+                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                DataInputStream dis = new DataInputStream(socket.getInputStream());
 
                 //Send init. encryption key
                 UUID initKey = UUID.randomUUID();
-                oos.writeUTF(initKey.toString());
+                dos.writeUTF(initKey.toString());
+
                 String[] d;
 
                 try{
-                    d = decrypt(ois.readUTF(), initKey).split(":");
+                    d = decrypt(dis.readUTF(), initKey).split(":");
                 }catch(Exception ex) {
                     try{
-                        oos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Unable to decrypt login information!")).toString(), initKey));
+                        dos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Unable to decrypt login information!")).toString(), initKey));
                     }catch(Exception e) {e.printStackTrace();}
 
                     ex.printStackTrace();
@@ -76,21 +77,21 @@ public class NotifierServer extends Thread{
                 char[] password = d[1].toCharArray();
 
                 if(!NotifierPlugin.getSettingsManager().getUserData().containsKey(username)) {
-                    oos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString(), initKey));
-                    oos.flush();
+                    dos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString(), initKey));
+                    dos.flush();
                     continue;
                 }
 
                 if(!Arrays.equals(NotifierPlugin.getSettingsManager().getUserData().get(username), password)) {
-                    oos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString(), initKey));
-                    oos.flush();
+                    dos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString(), initKey));
+                    dos.flush();
                     continue;
                 }
 
-                oos.writeUTF(encrypt(new PacketLoginSuccess(Notifier.emptyPacketArgs()).toString(), initKey));
-                oos.flush();
+                dos.writeUTF(encrypt(new PacketLoginSuccess(Notifier.emptyPacketArgs()).toString(), initKey));
+                dos.flush();
 
-                new NotifierClient(socket, ois, oos, username, initKey);
+                new NotifierClient(socket, dis, dos, username, initKey);
 
                 NotifierPlugin.getPlugin().getLogger().info(username + " has logged in!");
             }catch(SocketTimeoutException ex) {
