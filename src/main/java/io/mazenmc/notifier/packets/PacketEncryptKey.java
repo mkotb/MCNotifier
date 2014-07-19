@@ -27,7 +27,7 @@ import java.util.UUID;
 public class PacketEncryptKey extends Packet{
 
     private UUID encryptionKey;
-    private static final int id = 8;
+    private static final int id = 17;
 
     public PacketEncryptKey(String[] args) {
         this.encryptionKey = UUID.fromString(args[0]);
