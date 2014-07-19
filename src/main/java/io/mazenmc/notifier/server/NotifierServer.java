@@ -47,7 +47,7 @@ public class NotifierServer extends Thread{
 
     @Override
     public void run() {
-        while(true) {
+        while(!server.isClosed()) {
             Socket socket;
             try{
                 socket = server.accept();

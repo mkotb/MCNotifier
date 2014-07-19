@@ -24,7 +24,6 @@ import io.mazenmc.notifier.listeners.ExceptionListener;
 import io.mazenmc.notifier.packets.Packet;
 import io.mazenmc.notifier.packets.PacketServerShutdown;
 import io.mazenmc.notifier.server.NotifierServer;
-import io.mazenmc.notifier.util.ClassFinder;
 import io.mazenmc.notifier.util.SettingsManager;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -32,6 +31,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.reflections.Reflections;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -42,7 +42,6 @@ public class NotifierPlugin extends JavaPlugin {
     private static NotifierPlugin plugin;
     private static SettingsManager settingsManager;
     private static NotifierEventHandler notifierEventHandler;
-    private static ClassFinder classFinder;
     private static Permission permission;
     private static NotifierServer server;
 
@@ -55,7 +54,6 @@ public class NotifierPlugin extends JavaPlugin {
         saveDefaultConfig();
         settingsManager = new SettingsManager();
         notifierEventHandler = new NotifierEventHandler();
-        classFinder = new ClassFinder();
 
         //Register packet classes
         Packet.registerAll();
@@ -89,9 +87,12 @@ public class NotifierPlugin extends JavaPlugin {
                 }
             }
         }.runTaskLater(this, 600L);
-        //Look for Vault
-        if(setupPermissions())
-            vaultFound = true;
+
+        try{
+            //Look for Vault
+            if(setupPermissions())
+                vaultFound = true;
+        }catch(ClassNotFoundException ignored) {vaultFound = false;}
     }
 
     @Override
@@ -114,7 +115,6 @@ public class NotifierPlugin extends JavaPlugin {
         plugin = null;
         settingsManager = null;
         notifierEventHandler = null;
-        classFinder = null;
     }
 
     /**
@@ -142,28 +142,16 @@ public class NotifierPlugin extends JavaPlugin {
     }
 
     /**
-     * Gets the ClassFinders instance
-     * @return ClassFinder instance
-     */
-    public static ClassFinder getClassFinder() {
-        return classFinder;
-    }
-
-    /**
      * Register all Notifier's listeners
      * @throws Exception
      */
     private void registerListeners() throws Exception{
-        for(Class<?> cls : getClassFinder().find("io.mazenmc.notifier.listeners.bukkit")) {
-            if(cls.isAssignableFrom(Listener.class)) {
-                getServer().getPluginManager().registerEvents(cls.asSubclass(Listener.class).getConstructor().newInstance(), plugin);
-            }
+        for(Class<?> cls : new Reflections("io.mazenmc.notifier.listeners.bukkit").getSubTypesOf(Listener.class)) {
+            getServer().getPluginManager().registerEvents(cls.asSubclass(Listener.class).getConstructor().newInstance(), plugin);
         }
 
-        for(Class<?> cls : getClassFinder().find("io.mazenmc.notifier.listeners.notifier")) {
-            if(cls.isAssignableFrom(NotifierListener.class)) {
-                getEventHandler().registerListener(cls.asSubclass(NotifierListener.class).getConstructor().newInstance());
-            }
+        for(Class<?> cls : new Reflections("io.mazenmc.notifier.listeners.notifier").getSubTypesOf(NotifierListener.class)) {
+            getEventHandler().registerListener(cls.asSubclass(NotifierListener.class).getConstructor().newInstance());
         }
     }
 
@@ -199,7 +187,13 @@ public class NotifierPlugin extends JavaPlugin {
         return server;
     }
 
-    private boolean setupPermissions() {
+    private boolean setupPermissions() throws ClassNotFoundException{
+        try{
+            Class cls = Class.forName("net.milkbowl.vault.permission.Permission.class");
+        }catch(ClassNotFoundException exception) {
+            throw new ClassNotFoundException(exception.getMessage());
+        }
+
         RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
         if (permissionProvider != null) {
             permission = permissionProvider.getProvider();

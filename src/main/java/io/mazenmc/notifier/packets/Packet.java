@@ -17,11 +17,11 @@
 
 package io.mazenmc.notifier.packets;
 
-import io.mazenmc.notifier.NotifierPlugin;
+import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Set;
 
 public abstract class Packet {
 
@@ -29,10 +29,11 @@ public abstract class Packet {
     public static final String SPLITTER = "≰";
 
     public static void registerAll() {
-        List<Class<?>> lcs = NotifierPlugin.getClassFinder().find("io.mazenmc.notifier.packets");
+        Set<Class<? extends Packet>> scs = new Reflections("io.mazenmc.notifier.packets").getSubTypesOf(Packet.class);
+        Class<?>[] lcs = scs.toArray(new Class[scs.size()]);
 
-        for(int i = 0; i < lcs.size(); i++) {
-            Class<?> cls = lcs.get(i);
+        for(int i = 0; i < lcs.length; i++) {
+            Class<?> cls = lcs[i];
             if(!cls.getName().equals("io.mazenmc.notifier.packets.Packet") && !cls.getName().equals("io.mazenmc.notifier.packets.PacketReader")) {
                 try{
                     packets.put((int) cls.getDeclaredMethod("getID").invoke(null), cls);
