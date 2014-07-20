@@ -25,9 +25,13 @@ public final class Encrypter {
 
     public static String encrypt(String plainText, UUID uuid) throws Exception {
         return new String(plainText.getBytes(Charset.forName("UTF-8")));
+
+        //Empty until written at a later point in time
     }
 
     public static String decrypt(String encryptedTextBytes, UUID uuid) throws Exception {
         return encryptedTextBytes;
+
+        //Empty until written at a later point in time
     }
 }

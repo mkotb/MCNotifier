@@ -27,6 +27,7 @@ import io.mazenmc.notifier.packets.PacketReceiveError;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
@@ -225,10 +226,18 @@ public class NotifierClient {
                     logout();
                     write(new PacketForceLogout(ex.getMessage().split(Packet.SPLITTER)));
                     break;
-                }catch(Exception ex) {
+                }catch(SocketException ex) {
+                    write(new PacketReceiveError(ex.getMessage().split(Packet.SPLITTER)));
+                    ex.printStackTrace();
+                    break;
+                }catch(IOException ex) {
                     write(new PacketReceiveError(ex.getMessage().split(Packet.SPLITTER)));
                     ex.printStackTrace();
                     continue;
+                }catch(Exception ex) {
+                    write(new PacketReceiveError(ex.getMessage().split(Packet.SPLITTER)));
+                    ex.printStackTrace();
+                    break;
                 }
 
                 getEventHandler().callEvent(new PacketReceiveEvent(rtn.split(Packet.SPLITTER), copy()));

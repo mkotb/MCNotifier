@@ -67,7 +67,7 @@ public class NotifierPlugin extends JavaPlugin {
         }
 
         //Start the NotifierServer
-        try {
+        try{
             server = new NotifierServer();
             server.start();
         }catch(IOException ex) {
