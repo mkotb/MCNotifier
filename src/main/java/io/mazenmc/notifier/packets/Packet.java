@@ -26,7 +26,7 @@ import java.util.Set;
 public abstract class Packet {
 
     private static HashMap<Integer, Class<?>> packets = new HashMap<>();
-    public static final String SPLITTER = "≰";
+    public static final String SPLITTER = "//";
 
     public static void registerAll() {
         Set<Class<? extends Packet>> scs = new Reflections("io.mazenmc.notifier.packets").getSubTypesOf(Packet.class);
