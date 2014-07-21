@@ -24,7 +24,8 @@ public class ClassFinder {
             Class<?> cls;
 
             if(name.endsWith(".class") && name.startsWith(pkg) && !(name.contains("$")) &&
-                    ((cls = Class.forName(name.replaceAll(".class", "").replaceAll(File.separator, "."))).isAssignableFrom(filter) || filter.equals(Object.class))) {
+                    filter.isAssignableFrom(Class.forName(name.replaceAll(".class", "").replaceAll(File.separator, "."))) || filter.equals(Object.class)) {
+                cls = Class.forName(name.replaceAll(".class", "").replaceAll(File.separator, "."));
                 classes.add(cls.asSubclass(filter));
             }
         }
