@@ -156,10 +156,12 @@ public class NotifierClient {
      * Logout the client
      */
     public void logout() {
-        clients.remove(this);
-        clientThread.interrupt();
+        if(!hasLoggedOut()) {
+            clients.remove(this);
+            clientThread.interrupt();
 
-        NotifierPlugin.getEventHandler().callEvent(new ClientLogoutEvent(this));
+            NotifierPlugin.getEventHandler().callEvent(new ClientLogoutEvent(this));
+        }
     }
 
     /**
@@ -176,6 +178,10 @@ public class NotifierClient {
      */
     public void simulatePacket(Packet packet) {
         getEventHandler().callEvent(new PacketReceiveEvent(packet.toString().split(Packet.SPLITTER), this));
+    }
+
+    public boolean hasLoggedOut() {
+        return clients.contains(this);
     }
 
     /**
@@ -219,15 +225,12 @@ public class NotifierClient {
                 try{
                     rtn = decrypt(getInputStream().readUTF(), encryptionKey);
                 }catch(SocketTimeoutException ex) {
-                    logout();
                     write(new PacketForceLogout(ex.getMessage().split(" ")));
-                    break;
-                }catch(EOFException ex) {
                     logout();
-                    write(new PacketForceLogout(ex.getMessage().split(" ")));
                     break;
                 }catch(SocketException ex) {
-                    if(ex.getMessage().contains("Broken pipe")) {
+
+                    if(ex.getMessage().toLowerCase().contains("connection reset")) {
                         logout();
                         break;
                     }
@@ -236,12 +239,19 @@ public class NotifierClient {
                     ex.printStackTrace();
                     break;
                 }catch(IOException ex) {
-                    write(new PacketReceiveError(ex.getMessage().split(" ")));
-                    ex.printStackTrace();
-                    continue;
+                    if(hasLoggedOut()) {
+                        write(new PacketReceiveError(ex.getMessage().split(" ")));
+                        ex.printStackTrace();
+                        continue;
+                    }
+
+                    break;
                 }catch(Exception ex) {
-                    write(new PacketReceiveError(ex.getMessage().split(" ")));
-                    ex.printStackTrace();
+                    if(hasLoggedOut()) {
+                        write(new PacketReceiveError(ex.getMessage().split(" ")));
+                        ex.printStackTrace();
+                    }
+
                     break;
                 }
 
