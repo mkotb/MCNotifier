@@ -1,8 +1,10 @@
 package io.mazenmc.notifier.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -39,5 +41,20 @@ public class ClassFinder {
 
     public static List<Class<?>> find(String pkg, File f) throws Exception {
         return find(pkg, Object.class, f);
+    }
+
+    public static <T> List<Class<? extends T>> find(String pkg, Class<T> filter) throws Exception{
+        List<Class<? extends T>> classes = new ArrayList<>();
+
+        for(File f : Bukkit.getWorldContainer().listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.getName().endsWith(".jar");
+            }
+        })) {
+            classes.addAll(find(pkg, filter, f));
+        }
+
+        return classes;
     }
 }
