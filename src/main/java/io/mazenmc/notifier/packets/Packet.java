@@ -17,26 +17,29 @@
 
 package io.mazenmc.notifier.packets;
 
-import org.reflections.Reflections;
+import io.mazenmc.notifier.NotifierPlugin;
+import io.mazenmc.notifier.util.ClassFinder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
 
 public abstract class Packet {
 
     private static HashMap<Integer, Class<?>> packets = new HashMap<>();
-    public static final String SPLITTER = "//";
+    public static final String SPLITTER = "/@/";
 
-    public static void registerAll() {
-        Set<Class<? extends Packet>> scs = new Reflections("io.mazenmc.notifier.packets").getSubTypesOf(Packet.class);
-        Class<?>[] lcs = scs.toArray(new Class[scs.size()]);
+    public static void registerAll() throws Exception{
+        List<Class<?>> lcs = ClassFinder.find("io.mazenmc.notifier.packets", Object.class, NotifierPlugin.getPlugin());
 
-        for(int i = 0; i < lcs.length; i++) {
-            Class<?> cls = lcs[i];
+        for(int i = 0; i < lcs.size(); i++) {
+            Class<?> cls = lcs.get(i);
+
             if(!cls.getName().equals("io.mazenmc.notifier.packets.Packet") && !cls.getName().equals("io.mazenmc.notifier.packets.PacketReader")) {
                 try{
-                    packets.put((int) cls.getDeclaredMethod("getID").invoke(null), cls);
+                    int id = (int) cls.getDeclaredMethod("getID").invoke(null);
+
+                    packets.put(id, cls);
                 }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
                     packets.put(i, cls);
                 }

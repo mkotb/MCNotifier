@@ -17,8 +17,10 @@
 
 package io.mazenmc.notifier.listeners.notifier;
 
+import io.mazenmc.notifier.NotifierPlugin;
 import io.mazenmc.notifier.event.NotifierListener;
 import io.mazenmc.notifier.event.NotifierMethod;
+import io.mazenmc.notifier.events.ClientLogoutEvent;
 import io.mazenmc.notifier.events.PacketReceiveEvent;
 import io.mazenmc.notifier.packets.PacketClientLogout;
 
@@ -32,5 +34,10 @@ public class LogoutListener implements NotifierListener{
             packet.setClient(event.getClient());
             packet.handle();
         }
+    }
+
+    @NotifierMethod
+    public void onLogout(ClientLogoutEvent event) {
+        NotifierPlugin.log(event.getClient().getUsername() + " has logged out!");
     }
 }

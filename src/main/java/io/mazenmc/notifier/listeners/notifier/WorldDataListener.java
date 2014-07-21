@@ -7,9 +7,6 @@ import io.mazenmc.notifier.events.PacketReceiveEvent;
 import io.mazenmc.notifier.packets.PacketWorldDataRequest;
 import io.mazenmc.notifier.packets.PacketWorldDataResponse;
 
-/**
- * Created by mazen on 7/2/14.
- */
 public class WorldDataListener implements NotifierListener{
 
     @NotifierMethod

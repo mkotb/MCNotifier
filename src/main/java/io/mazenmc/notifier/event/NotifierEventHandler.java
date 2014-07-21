@@ -48,8 +48,8 @@ public class NotifierEventHandler {
         for(int i = 0; i < list.size(); i++) {
             NotifierListener listener = list.get(i);
 
-            for(Method method : listener.getClass().getDeclaredMethods()) {
-                if(method.getParameterTypes().length == 1 && method.getParameterTypes()[0] == event.getClass() && method.isAnnotationPresent(NotifierMethod.class)) {
+            for(Method method : listener.getClass().getMethods()) {
+                if(method.getParameterTypes().length == 1 && method.getParameterTypes()[0].getName().equals(event.getClass().getName()) && method.isAnnotationPresent(NotifierMethod.class)) {
                     try{
                         method.invoke(listener, event);
                     }catch(IllegalAccessException | InvocationTargetException e) {
@@ -71,8 +71,8 @@ public class NotifierEventHandler {
     public void registerListener(NotifierListener listener) {
         List<Class<? extends NotifierEvent>> listeningEvents = new ArrayList<>();
 
-        for(Method method : listener.getClass().getDeclaredMethods()) {
-            if(method.getParameterTypes().length == 1 && method.getParameterTypes()[0].isAssignableFrom(NotifierEvent.class) && method.isAnnotationPresent(NotifierMethod.class)) {
+        for(Method method : listener.getClass().getMethods()) {
+            if(method.getParameterTypes().length == 1 && NotifierEvent.class.isAssignableFrom(method.getParameterTypes()[0]) && method.isAnnotationPresent(NotifierMethod.class)) {
                 listeningEvents.add(method.getParameterTypes()[0].asSubclass(NotifierEvent.class));
             }
         }

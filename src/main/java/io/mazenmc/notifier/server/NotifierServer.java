@@ -50,7 +50,10 @@ public class NotifierServer extends Thread{
         while(!server.isClosed()) {
             Socket socket;
             try{
+                log("Waiting for new connection...");
                 socket = server.accept();
+
+                socket.setSoTimeout(Integer.MAX_VALUE);
 
                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
                 DataInputStream dis = new DataInputStream(socket.getInputStream());
@@ -58,6 +61,7 @@ public class NotifierServer extends Thread{
                 //Send init. encryption key
                 UUID initKey = UUID.randomUUID();
                 dos.writeUTF(initKey.toString());
+                dos.flush();
 
                 String[] d;
 
@@ -79,17 +83,23 @@ public class NotifierServer extends Thread{
                 if(!NotifierPlugin.getSettingsManager().getUserData().containsKey(username)) {
                     dos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString(), initKey));
                     dos.flush();
+
+                    log("User was unable to login, sent PacketLoginError.");
                     continue;
                 }
 
                 if(!Arrays.equals(NotifierPlugin.getSettingsManager().getUserData().get(username), password)) {
                     dos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString(), initKey));
                     dos.flush();
+
+                    log("User was unable to login, sent PacketLoginError.");
                     continue;
                 }
 
                 dos.writeUTF(encrypt(new PacketLoginSuccess(Notifier.emptyPacketArgs()).toString(), initKey));
                 dos.flush();
+
+                log("User was able to login, sent PacketLoginSuccess!");
 
                 new NotifierClient(socket, dis, dos, username, initKey);
 
@@ -104,6 +114,10 @@ public class NotifierServer extends Thread{
             }catch (Exception ex) {
                 ex.printStackTrace();
             }
+
+            try{
+                Thread.sleep(100);
+            }catch(InterruptedException ignored) {}
         }
     }
 

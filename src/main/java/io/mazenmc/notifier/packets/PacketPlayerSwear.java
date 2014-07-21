@@ -21,7 +21,7 @@ import io.mazenmc.notifier.Notifier;
 
 public class PacketPlayerSwear extends Packet{
 
-    private static final int id = 7;
+    private static final int id = 19;
     private String swear;
     private String message;
 

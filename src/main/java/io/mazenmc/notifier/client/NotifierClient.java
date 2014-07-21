@@ -220,22 +220,27 @@ public class NotifierClient {
                     rtn = decrypt(getInputStream().readUTF(), encryptionKey);
                 }catch(SocketTimeoutException ex) {
                     logout();
-                    write(new PacketForceLogout(ex.getMessage().split(Packet.SPLITTER)));
+                    write(new PacketForceLogout(ex.getMessage().split(" ")));
                     break;
                 }catch(EOFException ex) {
                     logout();
-                    write(new PacketForceLogout(ex.getMessage().split(Packet.SPLITTER)));
+                    write(new PacketForceLogout(ex.getMessage().split(" ")));
                     break;
                 }catch(SocketException ex) {
-                    write(new PacketReceiveError(ex.getMessage().split(Packet.SPLITTER)));
+                    if(ex.getMessage().contains("Broken pipe")) {
+                        logout();
+                        break;
+                    }
+
+                    write(new PacketReceiveError(ex.getMessage().split(" ")));
                     ex.printStackTrace();
                     break;
                 }catch(IOException ex) {
-                    write(new PacketReceiveError(ex.getMessage().split(Packet.SPLITTER)));
+                    write(new PacketReceiveError(ex.getMessage().split(" ")));
                     ex.printStackTrace();
                     continue;
                 }catch(Exception ex) {
-                    write(new PacketReceiveError(ex.getMessage().split(Packet.SPLITTER)));
+                    write(new PacketReceiveError(ex.getMessage().split(" ")));
                     ex.printStackTrace();
                     break;
                 }

@@ -9,7 +9,7 @@ import static java.lang.Double.parseDouble;
 
 public class PacketSetPlayerVelocity extends Packet{
 
-    private static final int id = 15;
+    private static final int id = 18;
     private String name;
     private Vector vector;
 

@@ -24,6 +24,7 @@ import io.mazenmc.notifier.listeners.ExceptionListener;
 import io.mazenmc.notifier.packets.Packet;
 import io.mazenmc.notifier.packets.PacketServerShutdown;
 import io.mazenmc.notifier.server.NotifierServer;
+import io.mazenmc.notifier.util.ClassFinder;
 import io.mazenmc.notifier.util.SettingsManager;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -31,7 +32,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.reflections.Reflections;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -56,7 +56,12 @@ public class NotifierPlugin extends JavaPlugin {
         notifierEventHandler = new NotifierEventHandler();
 
         //Register packet classes
-        Packet.registerAll();
+        try{
+            Packet.registerAll();
+        }catch(Exception ex) {
+            getLogger().log(Level.SEVERE, "Unable to register packets, disabling plugin..", ex);
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
 
         //Register Notifier plugin classes
         try{
@@ -99,7 +104,7 @@ public class NotifierPlugin extends JavaPlugin {
     public void onDisable() {
         //Notify clients of server shutdown
         for(NotifierClient client : NotifierClient.getClients()) {
-            client.write(new PacketServerShutdown(null));
+            client.write(new PacketServerShutdown(Notifier.emptyPacketArgs()));
         }
 
         //Shut down the NotifierServer in-case of reloading
@@ -145,13 +150,13 @@ public class NotifierPlugin extends JavaPlugin {
      * Register all Notifier's listeners
      * @throws Exception
      */
-    private void registerListeners() throws Exception{
-        for(Class<?> cls : new Reflections("io.mazenmc.notifier.listeners.bukkit").getSubTypesOf(Listener.class)) {
-            getServer().getPluginManager().registerEvents(cls.asSubclass(Listener.class).getConstructor().newInstance(), plugin);
+    private void registerListeners() throws Exception {
+        for(Class<?> cls : ClassFinder.find("io.mazenmc.notifier.listeners.bukkit", Object.class, this)) {
+            getServer().getPluginManager().registerEvents((Listener) cls.newInstance(), plugin);
         }
 
-        for(Class<?> cls : new Reflections("io.mazenmc.notifier.listeners.notifier").getSubTypesOf(NotifierListener.class)) {
-            getEventHandler().registerListener(cls.asSubclass(NotifierListener.class).getConstructor().newInstance());
+        for(Class<?> cls : ClassFinder.find("io.mazenmc.notifier.listeners.notifier", Object.class, this)) {
+            getEventHandler().registerListener((NotifierListener) cls.newInstance());
         }
     }
 
@@ -189,7 +194,7 @@ public class NotifierPlugin extends JavaPlugin {
 
     private boolean setupPermissions() throws ClassNotFoundException{
         try{
-            Class cls = Class.forName("net.milkbowl.vault.permission.Permission.class");
+            Class cls = Class.forName("net.milkbowl.vault.permission.Permission");
         }catch(ClassNotFoundException exception) {
             throw new ClassNotFoundException(exception.getMessage());
         }
