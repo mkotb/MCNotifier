@@ -33,7 +33,7 @@ public class ExceptionListener extends PluginLogger{
         super.log(logRecord);
     }
 
-    private void handleLog(LogRecord record) {
+    private void handleLog(final LogRecord record) {
         if(record.getThrown() != null) {
             for(NotifierClient client : NotifierClient.getClients()) {
                 client.write(new PacketExceptionThrown(Notifier.generatePacketArgs(record.getThrown().getClass().getName(), record.getThrown().getMessage(), pluginN)));

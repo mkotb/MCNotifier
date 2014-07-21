@@ -38,7 +38,7 @@ import static io.mazenmc.notifier.util.Encrypter.*;
 
 public class NotifierClient {
 
-    private static  List<NotifierClient> clients = new ArrayList<>();
+    private static List<NotifierClient> clients = new ArrayList<>();
     private Socket socket;
     private DataOutputStream outputStream;
     private DataInputStream inputStream;
@@ -239,7 +239,7 @@ public class NotifierClient {
                     ex.printStackTrace();
                     break;
                 }catch(IOException ex) {
-                    if(hasLoggedOut()) {
+                    if(!hasLoggedOut()) {
                         write(new PacketReceiveError(ex.getMessage().split(" ")));
                         ex.printStackTrace();
                         continue;
@@ -247,7 +247,7 @@ public class NotifierClient {
 
                     break;
                 }catch(Exception ex) {
-                    if(hasLoggedOut()) {
+                    if(!hasLoggedOut()) {
                         write(new PacketReceiveError(ex.getMessage().split(" ")));
                         ex.printStackTrace();
                     }

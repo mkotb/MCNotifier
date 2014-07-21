@@ -36,7 +36,7 @@ public class PacketAllPlayerDataResponse extends Packet{
         sb.append(SPLITTER);
 
         for(PacketPlayerDataResponse response : responses) {
-            sb.append(response.toString().substring(5).replaceAll(SPLITTER, "[@]"));
+            sb.append(response.toString().substring(5).replaceAll(SPLITTER, "~@~"));
             sb.append(SPLITTER);
         }
 

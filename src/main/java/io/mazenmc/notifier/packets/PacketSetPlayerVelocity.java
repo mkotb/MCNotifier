@@ -1,8 +1,10 @@
 package io.mazenmc.notifier.packets;
 
 import io.mazenmc.notifier.Notifier;
+import io.mazenmc.notifier.NotifierPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import static java.lang.Double.parseDouble;
@@ -34,10 +36,15 @@ public class PacketSetPlayerVelocity extends Packet{
 
     @Override
     public void handle() {
-        Player player = Bukkit.getPlayer(name);
+        final Player player = Bukkit.getPlayer(name);
 
         if(player != null) {
-            player.setVelocity(vector);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.setVelocity(vector);
+                }
+            }.runTask(NotifierPlugin.getPlugin());
         }
     }
 

@@ -4,7 +4,7 @@ import io.mazenmc.notifier.Notifier;
 
 public class PacketExceptionThrown extends Packet{
 
-    private static final int id = 20;
+    private static final int id = 22;
     private String exceptionName;
     private String exceptionMessage;
     private String pluginName;

@@ -1,8 +1,10 @@
 package io.mazenmc.notifier.packets;
 
 import io.mazenmc.notifier.Notifier;
+import io.mazenmc.notifier.NotifierPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PacketSetPlayerHealth extends Packet{
 
@@ -30,10 +32,15 @@ public class PacketSetPlayerHealth extends Packet{
 
     @Override
     public void handle() {
-        Player player = Bukkit.getPlayer(name);
+        final Player player = Bukkit.getPlayer(name);
 
         if(player != null) {
-            player.setHealth(health);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.setHealth(health);
+                }
+            }.runTask(NotifierPlugin.getPlugin());
         }
     }
 

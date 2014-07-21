@@ -1,8 +1,10 @@
 package io.mazenmc.notifier.packets;
 
 import io.mazenmc.notifier.Notifier;
+import io.mazenmc.notifier.NotifierPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Created by mazen on 7/3/14.
@@ -33,10 +35,15 @@ public class PacketSetPlayerHunger extends Packet{
 
     @Override
     public void handle() {
-        Player player = Bukkit.getPlayer(name);
+        final Player player = Bukkit.getPlayer(name);
 
         if(player != null) {
-            player.setFoodLevel(hunger);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.setFoodLevel(hunger);
+                }
+            }.runTask(NotifierPlugin.getPlugin());
         }
     }
 
