@@ -156,12 +156,10 @@ public class NotifierClient {
      * Logout the client
      */
     public void logout() {
-        if(!hasLoggedOut()) {
-            clients.remove(this);
-            clientThread.interrupt();
+        clients.remove(this);
+        clientThread.interrupt();
 
-            NotifierPlugin.getEventHandler().callEvent(new ClientLogoutEvent(this));
-        }
+        NotifierPlugin.getEventHandler().callEvent(new ClientLogoutEvent(this));
     }
 
     /**
@@ -229,14 +227,7 @@ public class NotifierClient {
                     logout();
                     break;
                 }catch(SocketException ex) {
-
-                    if(ex.getMessage().toLowerCase().contains("connection reset")) {
-                        logout();
-                        break;
-                    }
-
-                    write(new PacketReceiveError(ex.getMessage().split(" ")));
-                    ex.printStackTrace();
+                    logout();
                     break;
                 }catch(IOException ex) {
                     if(!hasLoggedOut()) {
@@ -245,6 +236,8 @@ public class NotifierClient {
                         continue;
                     }
 
+                    break;
+                }catch(NullPointerException ex) {
                     break;
                 }catch(Exception ex) {
                     if(!hasLoggedOut()) {

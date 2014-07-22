@@ -40,6 +40,10 @@ public class PacketPlayerKick extends Packet{
         }
     }
 
+    public static int getID() {
+        return ID;
+    }
+
     @Override
     public String toString() {
         return Notifier.buildString(ID, SPLITTER, playerName, SPLITTER, message);

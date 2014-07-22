@@ -68,6 +68,7 @@ public class PacketPlayerDataResponse extends Packet{
 
     @Override
     public String toString() {
-        return Notifier.buildString(id, SPLITTER, health, SPLITTER, StringUtils.capitalize(itemInHand.getType().toString()), SPLITTER, foodLevel, SPLITTER, world.getName(), SPLITTER, getIP());
+        return Notifier.buildString(id, SPLITTER, player.getName(), SPLITTER, health, SPLITTER, StringUtils.capitalize(itemInHand.getType().toString()),
+                SPLITTER, foodLevel, SPLITTER, world.getName(), SPLITTER, getIP());
     }
 }

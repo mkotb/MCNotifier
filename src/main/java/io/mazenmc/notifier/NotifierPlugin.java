@@ -42,7 +42,7 @@ public class NotifierPlugin extends JavaPlugin {
     private static NotifierPlugin plugin;
     private static SettingsManager settingsManager;
     private static NotifierEventHandler notifierEventHandler;
-    private static Permission permission;
+    private static Object permission;
     private static NotifierServer server;
 
     private static boolean vaultFound = false;
@@ -93,11 +93,11 @@ public class NotifierPlugin extends JavaPlugin {
             }
         }.runTaskLater(this, 600L);
 
-        try{
-            //Look for Vault
-            if(setupPermissions())
-                vaultFound = true;
-        }catch(ClassNotFoundException ignored) {vaultFound = false;}
+        vaultFound = Bukkit.getPluginManager().getPlugin("Vault") != null;
+
+        if(vaultFound) {
+            setupPermissions();
+        }
     }
 
     @Override
@@ -173,7 +173,7 @@ public class NotifierPlugin extends JavaPlugin {
      * @return Permission registration from vault
      */
     public static Permission getPermission() {
-        return permission;
+        return (Permission) permission;
     }
 
     /**
@@ -192,11 +192,9 @@ public class NotifierPlugin extends JavaPlugin {
         return server;
     }
 
-    private boolean setupPermissions() throws ClassNotFoundException{
-        try{
-            Class cls = Class.forName("net.milkbowl.vault.permission.Permission");
-        }catch(ClassNotFoundException exception) {
-            throw new ClassNotFoundException(exception.getMessage());
+    private boolean setupPermissions() {
+        if(Bukkit.getPluginManager().getPlugin("Vault") == null) {
+            return false;
         }
 
         RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
