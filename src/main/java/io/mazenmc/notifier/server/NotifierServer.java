@@ -26,6 +26,7 @@ import io.mazenmc.notifier.packets.PacketLoginSuccess;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.UUID;
@@ -84,7 +85,6 @@ public class NotifierServer extends Thread{
                     dos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString(), initKey));
                     dos.flush();
 
-                    log("User was unable to login, sent PacketLoginError.");
                     continue;
                 }
 
@@ -92,14 +92,11 @@ public class NotifierServer extends Thread{
                     dos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString(), initKey));
                     dos.flush();
 
-                    log("User was unable to login, sent PacketLoginError.");
                     continue;
                 }
 
                 dos.writeUTF(encrypt(new PacketLoginSuccess(Notifier.emptyPacketArgs()).toString(), initKey));
                 dos.flush();
-
-                log("User was able to login, sent PacketLoginSuccess!");
 
                 new NotifierClient(socket, dis, dos, username, initKey);
 
@@ -111,13 +108,12 @@ public class NotifierServer extends Thread{
                 }catch(Exception e) {e.printStackTrace();}
 
                 ex.printStackTrace();
+            }catch(SocketException ex) {
+                break;
             }catch (Exception ex) {
                 ex.printStackTrace();
             }
 
-            try{
-                Thread.sleep(100);
-            }catch(InterruptedException ignored) {}
         }
     }
 
