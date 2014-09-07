@@ -24,9 +24,6 @@ import java.util.UUID;
 
 public final class Encrypter {
 
-    private static final int ITERATIONS = 10000;
-    private static final int KEY_LENGTH = 256;
-
     /**
      *
      * @param plainText the text to be encrypted
