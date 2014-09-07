@@ -29,6 +29,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -108,7 +109,7 @@ public class NotifierClient {
             getEventHandler().callEvent(new PacketSendEvent(packet));
             outputStream.writeUTF(encrypt(packet.toString(), encryptionKey));
             flush();
-        }catch(Exception ex) {
+        }catch(GeneralSecurityException | IOException ex) {
             ex.printStackTrace();
         }
     }
@@ -118,7 +119,7 @@ public class NotifierClient {
             getEventHandler().callEvent(new PacketSendEvent(packet));
             outputStream.writeUTF(encrypt(packet.toString(), initKey));
             flush();
-        }catch(Exception ex) {
+        }catch(GeneralSecurityException | IOException ex) {
             ex.printStackTrace();
         }
     }

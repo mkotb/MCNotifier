@@ -17,21 +17,71 @@
 
 package io.mazenmc.notifier.util;
 
-import java.nio.charset.Charset;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.GeneralSecurityException;
 import java.util.UUID;
 
 public final class Encrypter {
 
+    private static final int ITERATIONS = 10000;
+    private static final int KEY_LENGTH = 256;
 
-    public static String encrypt(String plainText, UUID uuid) throws Exception {
-        return new String(plainText.getBytes(Charset.forName("UTF-8")));
-
-        //Empty until written at a later point in time
+    /**
+     *
+     * @param plainText the text to be encrypted
+     * @param key the key to encypt with
+     * @return
+     * @throws GeneralSecurityException if encryption failed
+     */
+    public static String encrypt(String plainText, UUID key) throws GeneralSecurityException {
+        String encryptionKey = key.toString().replaceAll("-", "");
+        byte[] b = new byte[encryptionKey.length() / 2];
+        for (int i = 0; i < b.length; i++){
+            int index = i * 2;
+            int v = Integer.parseInt(encryptionKey.substring(index, index + 2), 16);
+            b[i] = (byte)v;
+        }
+        SecretKeySpec sks = new SecretKeySpec(b, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, sks, cipher.getParameters());
+        byte[] encrypted = cipher.doFinal(plainText.getBytes());
+        StringBuilder sb = new StringBuilder(b.length * 2);
+        for (byte aB : encrypted) {
+            int v = aB & 0xff;
+            if (v < 16) {
+                sb.append('0');
+            }
+            sb.append(Integer.toHexString(v));
+        }
+        return sb.toString().toUpperCase();
     }
 
-    public static String decrypt(String encryptedTextBytes, UUID uuid) throws Exception {
-        return encryptedTextBytes;
-
-        //Empty until written at a later point in time
+    /**
+     *
+     * @param encryptedTextBytes the encrypted string
+     * @param key the key to decrypt with
+     * @return decrypted string
+     * @throws GeneralSecurityException if decryption fails
+     */
+    public static String decrypt(String encryptedTextBytes, UUID key) throws GeneralSecurityException {
+        String encryptionKey = key.toString().replaceAll("-", "");
+        byte[] b = new byte[encryptionKey.length() / 2];
+        for (int i = 0; i < b.length; i++){
+            int index = i * 2;
+            int v = Integer.parseInt(encryptionKey.substring(index, index + 2), 16);
+            b[i] = (byte)v;
+        }
+        SecretKeySpec sks = new SecretKeySpec(b, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, sks);
+        b = new byte[encryptedTextBytes.length() / 2];
+        for (int i = 0; i < b.length; i++){
+            int index = i * 2;
+            int v = Integer.parseInt(encryptedTextBytes.substring(index, index + 2), 16);
+            b[i] = (byte)v;
+        }
+        byte[] decrypted = cipher.doFinal(b);
+        return new String(decrypted);
     }
 }
