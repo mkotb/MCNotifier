@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2014 Mazen K.
+* Copyright (C) 2014 Mazen K., ROTNdev
 * This file is part of MCNotifier.
 *
 * MCNotifier for Bukkit is free software: you can redistribute it and/or modify
