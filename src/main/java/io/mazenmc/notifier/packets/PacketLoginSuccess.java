@@ -22,11 +22,12 @@ import io.mazenmc.notifier.Notifier;
 /**
  * Packet which will be notifying the client that they have logged in successfully
  */
-public class PacketLoginSuccess extends Packet{
+public class PacketLoginSuccess extends Packet {
 
     private static final int id = 1;
 
-    public PacketLoginSuccess(String[] args) {}
+    public PacketLoginSuccess(String[] args) {
+    }
 
     @Override
     public void handle() {

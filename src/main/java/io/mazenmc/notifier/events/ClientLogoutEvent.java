@@ -23,7 +23,7 @@ import io.mazenmc.notifier.event.NotifierEvent;
 /**
  * Event which would be called when a client has logged out
  */
-public class ClientLogoutEvent extends NotifierEvent{
+public class ClientLogoutEvent extends NotifierEvent {
 
     private NotifierClient client;
 

@@ -21,11 +21,11 @@ public class ClassFinder {
         Enumeration<JarEntry> enumeration = jar.entries();
         JarEntry entry = null;
 
-        while(enumeration.hasMoreElements() && (entry = enumeration.nextElement()) != null) {
+        while (enumeration.hasMoreElements() && (entry = enumeration.nextElement()) != null) {
             String name = entry.getName();
             Class<?> cls;
 
-            if(name.endsWith(".class") && name.startsWith(pkg) && !(name.contains("$")) &&
+            if (name.endsWith(".class") && name.startsWith(pkg) && !(name.contains("$")) &&
                     (filter.isAssignableFrom(Class.forName(name.replaceAll(".class", "").replaceAll(File.separator, "."))) || filter.equals(Object.class))) {
                 cls = Class.forName(name.replaceAll(".class", "").replaceAll(File.separator, "."));
                 classes.add(cls.asSubclass(filter));
@@ -43,10 +43,10 @@ public class ClassFinder {
         return find(pkg, Object.class, f);
     }
 
-    public static <T> List<Class<? extends T>> find(String pkg, Class<T> filter) throws Exception{
+    public static <T> List<Class<? extends T>> find(String pkg, Class<T> filter) throws Exception {
         List<Class<? extends T>> classes = new ArrayList<>();
 
-        for(File f : Bukkit.getWorldContainer().listFiles(new FileFilter() {
+        for (File f : Bukkit.getWorldContainer().listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
                 return pathname.getName().endsWith(".jar");

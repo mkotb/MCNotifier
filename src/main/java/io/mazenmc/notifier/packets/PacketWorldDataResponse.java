@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Packet which the server will respond to on the call of PacketWorldDataRequest
  */
-public class PacketWorldDataResponse extends Packet{
+public class PacketWorldDataResponse extends Packet {
 
     private static final int id = 9;
     private World world;
@@ -87,7 +87,7 @@ public class PacketWorldDataResponse extends Packet{
         sb.append(Packet.SPLITTER);
 
         StringBuilder playerBuilder = new StringBuilder("");
-        for(Player player : players) {
+        for (Player player : players) {
             playerBuilder.append(player.getName());
             playerBuilder.append(',');
         }

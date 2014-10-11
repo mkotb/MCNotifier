@@ -7,7 +7,7 @@ import org.bukkit.World;
 /**
  * Packet which will be informing the server that a client wishes to receive information about a certain world
  */
-public class PacketWorldDataRequest extends Packet{
+public class PacketWorldDataRequest extends Packet {
 
     private static final int id = 8;
     private World world;

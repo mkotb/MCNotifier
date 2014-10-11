@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.net.InetSocketAddress;
 
-public class PacketPlayerDataResponse extends Packet{
+public class PacketPlayerDataResponse extends Packet {
 
     private static final int id = 11;
     private Player player;
@@ -18,7 +18,7 @@ public class PacketPlayerDataResponse extends Packet{
     private ItemStack itemInHand;
     private World world;
     private InetSocketAddress address;
-    
+
     public PacketPlayerDataResponse(String[] args) {
         player = Bukkit.getPlayer(args[0]);
 

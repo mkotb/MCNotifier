@@ -29,18 +29,18 @@ public abstract class Packet {
     private static HashMap<Integer, Class<?>> packets = new HashMap<>();
     public static final String SPLITTER = "/@/";
 
-    public static void registerAll() throws Exception{
+    public static void registerAll() throws Exception {
         List<Class<?>> lcs = ClassFinder.find("io.mazenmc.notifier.packets", Object.class, NotifierPlugin.getPlugin());
 
-        for(int i = 0; i < lcs.size(); i++) {
+        for (int i = 0; i < lcs.size(); i++) {
             Class<?> cls = lcs.get(i);
 
-            if(!cls.getName().equals("io.mazenmc.notifier.packets.Packet") && !cls.getName().equals("io.mazenmc.notifier.packets.PacketReader")) {
-                try{
+            if (!cls.getName().equals("io.mazenmc.notifier.packets.Packet") && !cls.getName().equals("io.mazenmc.notifier.packets.PacketReader")) {
+                try {
                     int id = (int) cls.getDeclaredMethod("getID").invoke(null);
 
                     packets.put(id, cls);
-                }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
                     packets.put(i, cls);
                 }
             }

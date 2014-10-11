@@ -36,7 +36,7 @@ public class YMLFile {
         fileName = Name + ".yml";
         file = new File(NotifierPlugin.getPlugin().getDataFolder(), fileName);
 
-        if(directory != null) {
+        if (directory != null) {
             fileName = directory + File.separator + fileName;
             file = new File(NotifierPlugin.getPlugin().getDataFolder() + File.separator + directory, fileName);
         }
@@ -96,9 +96,10 @@ public class YMLFile {
     }
 
     public void saveDefaultConfig() {
-        try{
+        try {
             getFile().createNewFile();
             NotifierPlugin.getPlugin().saveResource(getName(), false);
-        }catch(IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 }

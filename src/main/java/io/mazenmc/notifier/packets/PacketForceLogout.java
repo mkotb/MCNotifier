@@ -22,7 +22,7 @@ import io.mazenmc.notifier.Notifier;
 /**
  * Packet notifying the client that they have been forced logged out by the server
  */
-public class PacketForceLogout extends Packet{
+public class PacketForceLogout extends Packet {
 
     private String reason;
     private static final int id = 5;
@@ -30,7 +30,7 @@ public class PacketForceLogout extends Packet{
     public PacketForceLogout(String[] args) {
         StringBuilder sb = new StringBuilder("");
 
-        for(String s : args) {
+        for (String s : args) {
             sb.append(s);
             sb.append(' ');
         }

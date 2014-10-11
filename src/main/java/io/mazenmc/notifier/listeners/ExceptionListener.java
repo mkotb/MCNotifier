@@ -12,19 +12,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Field;
 import java.util.logging.LogRecord;
 
-public class ExceptionListener extends PluginLogger{
+public class ExceptionListener extends PluginLogger {
 
     private String pluginN;
 
     public ExceptionListener(Plugin context) {
         super(context);
 
-        try{
+        try {
             Field field = PluginLogger.class.getDeclaredField("pluginName");
             field.setAccessible(true);
 
             pluginN = (String) field.get(this);
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -36,15 +36,15 @@ public class ExceptionListener extends PluginLogger{
     }
 
     private void handleLog(final LogRecord record) {
-        if(record.getThrown() != null) {
-            for(NotifierClient client : NotifierClient.getClients()) {
+        if (record.getThrown() != null) {
+            for (NotifierClient client : NotifierClient.getClients()) {
                 client.write(new PacketExceptionThrown(Notifier.generatePacketArgs(record.getThrown().getClass().getName(), record.getThrown().getMessage(), pluginN)));
             }
         }
     }
 
-    public static void register() throws Exception{
-        for(Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+    public static void register() throws Exception {
+        for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
             JavaPlugin javaPlugin = (JavaPlugin) plugin;
             ExceptionListener logger = new ExceptionListener(javaPlugin);
             Field field = JavaPlugin.class.getDeclaredField("logger");

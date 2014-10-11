@@ -24,11 +24,11 @@ import io.mazenmc.notifier.events.ClientLogoutEvent;
 import io.mazenmc.notifier.events.PacketReceiveEvent;
 import io.mazenmc.notifier.packets.PacketClientLogout;
 
-public class LogoutListener implements NotifierListener{
+public class LogoutListener implements NotifierListener {
 
     @NotifierMethod
     public void onReceive(PacketReceiveEvent event) {
-        if(event.getPacket() instanceof PacketClientLogout) {
+        if (event.getPacket() instanceof PacketClientLogout) {
             PacketClientLogout packet = (PacketClientLogout) event.getPacket();
 
             packet.setClient(event.getClient());

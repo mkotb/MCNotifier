@@ -19,13 +19,18 @@ package io.mazenmc.notifier.client;
 
 import io.mazenmc.notifier.Notifier;
 import io.mazenmc.notifier.NotifierPlugin;
-import io.mazenmc.notifier.events.*;
+import io.mazenmc.notifier.events.ClientLoginEvent;
+import io.mazenmc.notifier.events.ClientLogoutEvent;
+import io.mazenmc.notifier.events.PacketReceiveEvent;
+import io.mazenmc.notifier.events.PacketSendEvent;
 import io.mazenmc.notifier.packets.Packet;
 import io.mazenmc.notifier.packets.PacketEncryptKey;
 import io.mazenmc.notifier.packets.PacketForceLogout;
 import io.mazenmc.notifier.packets.PacketReceiveError;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -34,8 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static io.mazenmc.notifier.NotifierPlugin.*;
-import static io.mazenmc.notifier.util.Encrypter.*;
+import static io.mazenmc.notifier.NotifierPlugin.getEventHandler;
+import static io.mazenmc.notifier.util.Encrypter.decrypt;
+import static io.mazenmc.notifier.util.Encrypter.encrypt;
 
 public class NotifierClient {
 
@@ -50,11 +56,12 @@ public class NotifierClient {
 
     /**
      * Constructor for a new NotifierClient
-     * @param socket The socket which will be stored for API use
-     * @param inputStream The input stream that will be used to communicate with the client
+     *
+     * @param socket       The socket which will be stored for API use
+     * @param inputStream  The input stream that will be used to communicate with the client
      * @param outputStream The output stream that will be used to communicate with the client
-     * @param username The username that has been defined in the config.yml
-     *  @param initKey The key which has been generated at login
+     * @param username     The username that has been defined in the config.yml
+     * @param initKey      The key which has been generated at login
      * @throws IOException
      */
     public NotifierClient(Socket socket, DataInputStream inputStream, DataOutputStream outputStream, String username, UUID initKey) throws IOException {
@@ -70,6 +77,7 @@ public class NotifierClient {
 
     /**
      * Gets the input stream
+     *
      * @return The input stream
      */
     public DataInputStream getInputStream() {
@@ -78,6 +86,7 @@ public class NotifierClient {
 
     /**
      * Gets the socket
+     *
      * @return The socket
      */
     public Socket getSocket() {
@@ -86,6 +95,7 @@ public class NotifierClient {
 
     /**
      * Gets the output stream
+     *
      * @return The output stream
      */
     public DataOutputStream getOutputStream() {
@@ -94,6 +104,7 @@ public class NotifierClient {
 
     /**
      * Gets the username of the client
+     *
      * @return The client stream
      */
     public String getUsername() {
@@ -102,24 +113,25 @@ public class NotifierClient {
 
     /**
      * Writes a packet to the client
+     *
      * @param packet The packet you wish to write to the client
      */
     public void write(Packet packet) {
-        try{
+        try {
             getEventHandler().callEvent(new PacketSendEvent(packet));
             outputStream.writeUTF(encrypt(packet.toString(), encryptionKey));
             flush();
-        }catch(GeneralSecurityException | IOException ex) {
+        } catch (GeneralSecurityException | IOException ex) {
             ex.printStackTrace();
         }
     }
 
     private void writeInit(Packet packet) {
-        try{
+        try {
             getEventHandler().callEvent(new PacketSendEvent(packet));
             outputStream.writeUTF(encrypt(packet.toString(), initKey));
             flush();
-        }catch(GeneralSecurityException | IOException ex) {
+        } catch (GeneralSecurityException | IOException ex) {
             ex.printStackTrace();
         }
     }
@@ -128,15 +140,16 @@ public class NotifierClient {
      * Flush all buffered data in the input stream
      */
     public void flush() {
-        try{
+        try {
             outputStream.flush();
-        }catch(IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     /**
      * Gets the ID of the client
+     *
      * @return ID of the client
      */
     public int getID() {
@@ -165,6 +178,7 @@ public class NotifierClient {
 
     /**
      * Gets a copy of the client
+     *
      * @return The client
      */
     public NotifierClient copy() {
@@ -173,6 +187,7 @@ public class NotifierClient {
 
     /**
      * Simulate a packet as-if the client has sent it
+     *
      * @param packet The packet you wish to simulate
      */
     public void simulatePacket(Packet packet) {
@@ -185,12 +200,13 @@ public class NotifierClient {
 
     /**
      * Finds the client instance by their username
+     *
      * @param username The username that has been defined in the config.yml
      * @return Found client
      */
     public static NotifierClient getClient(String username) {
-        for(NotifierClient client : getClients()) {
-            if(client.getUsername().equals(username))
+        for (NotifierClient client : getClients()) {
+            if (client.getUsername().equals(username))
                 return client;
         }
 
@@ -199,6 +215,7 @@ public class NotifierClient {
 
     /**
      * Get all signed in clients
+     *
      * @return All signed in clients
      */
     public static List<NotifierClient> getClients() {
@@ -207,6 +224,7 @@ public class NotifierClient {
 
     /**
      * Finds the client instance by their ID
+     *
      * @param id The ID you wish to use to find
      * @return Found client
      */
@@ -218,30 +236,30 @@ public class NotifierClient {
 
         @Override
         public void run() {
-            while(true) {
+            while (true) {
                 String rtn;
 
-                try{
+                try {
                     rtn = decrypt(getInputStream().readUTF(), encryptionKey);
-                }catch(SocketTimeoutException ex) {
+                } catch (SocketTimeoutException ex) {
                     write(new PacketForceLogout(ex.getMessage().split(" ")));
                     logout();
                     break;
-                }catch(SocketException ex) {
+                } catch (SocketException ex) {
                     logout();
                     break;
-                }catch(IOException ex) {
-                    if(!hasLoggedOut()) {
+                } catch (IOException ex) {
+                    if (!hasLoggedOut()) {
                         write(new PacketReceiveError(ex.getMessage().split(" ")));
                         ex.printStackTrace();
                         continue;
                     }
 
                     break;
-                }catch(NullPointerException ex) {
+                } catch (NullPointerException ex) {
                     break;
-                }catch(Exception ex) {
-                    if(!hasLoggedOut()) {
+                } catch (Exception ex) {
+                    if (!hasLoggedOut()) {
                         write(new PacketReceiveError(ex.getMessage().split(" ")));
                         ex.printStackTrace();
                     }

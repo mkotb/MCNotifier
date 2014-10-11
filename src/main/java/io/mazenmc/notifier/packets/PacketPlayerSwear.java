@@ -19,7 +19,7 @@ package io.mazenmc.notifier.packets;
 
 import io.mazenmc.notifier.Notifier;
 
-public class PacketPlayerSwear extends Packet{
+public class PacketPlayerSwear extends Packet {
 
     private static final int id = 19;
     private String swear;
@@ -30,7 +30,7 @@ public class PacketPlayerSwear extends Packet{
 
         StringBuilder sb = new StringBuilder("");
 
-        for(int i = 1; i < args.length; i++) {
+        for (int i = 1; i < args.length; i++) {
             sb.append(args[i]);
             sb.append(' ');
         }

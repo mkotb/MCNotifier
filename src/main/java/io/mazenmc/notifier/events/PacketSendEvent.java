@@ -23,7 +23,7 @@ import io.mazenmc.notifier.packets.Packet;
 /**
  * Event which will be called when any packet is sent by the server to the client
  */
-public class PacketSendEvent extends NotifierEvent{
+public class PacketSendEvent extends NotifierEvent {
 
     private Packet packet;
 

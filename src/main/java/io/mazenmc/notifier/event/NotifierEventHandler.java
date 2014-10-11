@@ -36,23 +36,24 @@ public class NotifierEventHandler {
 
     /**
      * Calls the event mentioned
+     *
      * @param event The event you wish to call
      */
     public void callEvent(NotifierEvent event) {
-        if(!eventData.containsKey(event.getClass())) {
+        if (!eventData.containsKey(event.getClass())) {
             eventData.put(event.getClass(), new ArrayList<NotifierListener>());
         }
 
         List<NotifierListener> list = eventData.get(event.getClass());
 
-        for(int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             NotifierListener listener = list.get(i);
 
-            for(Method method : listener.getClass().getMethods()) {
-                if(method.getParameterTypes().length == 1 && method.getParameterTypes()[0].getName().equals(event.getClass().getName()) && method.isAnnotationPresent(NotifierMethod.class)) {
-                    try{
+            for (Method method : listener.getClass().getMethods()) {
+                if (method.getParameterTypes().length == 1 && method.getParameterTypes()[0].getName().equals(event.getClass().getName()) && method.isAnnotationPresent(NotifierMethod.class)) {
+                    try {
                         method.invoke(listener, event);
-                    }catch(IllegalAccessException | InvocationTargetException e) {
+                    } catch (IllegalAccessException | InvocationTargetException e) {
                         String methodName = method.getName();
                         String listenerClassName = listener.getClass().getName();
                         String eventName = event.getClass().getName();
@@ -66,19 +67,20 @@ public class NotifierEventHandler {
 
     /**
      * Registers a listener to be called when an event is
+     *
      * @param listener The listener you wish to register
      */
     public void registerListener(NotifierListener listener) {
         List<Class<? extends NotifierEvent>> listeningEvents = new ArrayList<>();
 
-        for(Method method : listener.getClass().getMethods()) {
-            if(method.getParameterTypes().length == 1 && NotifierEvent.class.isAssignableFrom(method.getParameterTypes()[0]) && method.isAnnotationPresent(NotifierMethod.class)) {
+        for (Method method : listener.getClass().getMethods()) {
+            if (method.getParameterTypes().length == 1 && NotifierEvent.class.isAssignableFrom(method.getParameterTypes()[0]) && method.isAnnotationPresent(NotifierMethod.class)) {
                 listeningEvents.add(method.getParameterTypes()[0].asSubclass(NotifierEvent.class));
             }
         }
 
-        for(Class<? extends NotifierEvent> clzz : listeningEvents) {
-            if(!eventData.containsKey(clzz)) {
+        for (Class<? extends NotifierEvent> clzz : listeningEvents) {
+            if (!eventData.containsKey(clzz)) {
                 List<NotifierListener> lnl = new ArrayList<>();
                 lnl.add(listener);
                 eventData.put(clzz, lnl);

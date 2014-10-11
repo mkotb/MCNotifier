@@ -7,14 +7,14 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PacketAllPlayerDataResponse extends Packet{
+public class PacketAllPlayerDataResponse extends Packet {
 
     private static final int ID = 21;
 
     private List<PacketPlayerDataResponse> responses = new ArrayList<>();
 
     public PacketAllPlayerDataResponse(String[] args) {
-        for(Player p : Bukkit.getOnlinePlayers()) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
             responses.add(new PacketPlayerDataResponse(Notifier.generatePacketArgs(p.getName())));
         }
     }
@@ -35,7 +35,7 @@ public class PacketAllPlayerDataResponse extends Packet{
         sb.append(ID);
         sb.append(SPLITTER);
 
-        for(PacketPlayerDataResponse response : responses) {
+        for (PacketPlayerDataResponse response : responses) {
             sb.append(response.toString().substring(5).replaceAll(SPLITTER, "~@~"));
             sb.append(SPLITTER);
         }

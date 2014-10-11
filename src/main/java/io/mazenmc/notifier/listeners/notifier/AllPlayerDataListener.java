@@ -7,11 +7,11 @@ import io.mazenmc.notifier.events.PacketReceiveEvent;
 import io.mazenmc.notifier.packets.PacketAllPlayerDataRequest;
 import io.mazenmc.notifier.packets.PacketAllPlayerDataResponse;
 
-public class AllPlayerDataListener implements NotifierListener{
+public class AllPlayerDataListener implements NotifierListener {
 
     @NotifierMethod
     public void onReceive(PacketReceiveEvent event) {
-        if(event.getPacket() instanceof PacketAllPlayerDataRequest) {
+        if (event.getPacket() instanceof PacketAllPlayerDataRequest) {
             event.getClient().write(new PacketAllPlayerDataResponse(Notifier.emptyPacketArgs()));
         }
     }

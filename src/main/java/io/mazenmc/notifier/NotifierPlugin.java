@@ -56,26 +56,26 @@ public class NotifierPlugin extends JavaPlugin {
         notifierEventHandler = new NotifierEventHandler();
 
         //Register packet classes
-        try{
+        try {
             Packet.registerAll();
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             getLogger().log(Level.SEVERE, "Unable to register packets, disabling plugin..", ex);
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
         //Register Notifier plugin classes
-        try{
+        try {
             registerListeners();
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             getLogger().log(Level.SEVERE, "Unable to register listeners, disabling plugin..", ex);
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
         //Start the NotifierServer
-        try{
+        try {
             server = new NotifierServer();
             server.start();
-        }catch(IOException ex) {
+        } catch (IOException ex) {
             getLogger().log(Level.SEVERE, "Unable to start NotifierServer!", ex);
             getLogger().info("Disabling plugin..");
             Bukkit.getPluginManager().disablePlugin(this);
@@ -85,9 +85,9 @@ public class NotifierPlugin extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try{
+                try {
                     ExceptionListener.register();
-                }catch(Exception ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
@@ -95,7 +95,7 @@ public class NotifierPlugin extends JavaPlugin {
 
         vaultFound = Bukkit.getPluginManager().getPlugin("Vault") != null;
 
-        if(vaultFound) {
+        if (vaultFound) {
             setupPermissions();
         }
     }
@@ -103,14 +103,14 @@ public class NotifierPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         //Notify clients of server shutdown
-        for(NotifierClient client : NotifierClient.getClients()) {
+        for (NotifierClient client : NotifierClient.getClients()) {
             client.write(new PacketServerShutdown(Notifier.emptyPacketArgs()));
         }
 
         //Shut down the NotifierServer in-case of reloading
-        try{
+        try {
             server.close();
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             log("Unable to shutdown the NotifierServer, shutting down..");
             Bukkit.shutdown();
@@ -124,6 +124,7 @@ public class NotifierPlugin extends JavaPlugin {
 
     /**
      * Gets the plugin instance
+     *
      * @return Plugin instance
      */
     public static NotifierPlugin getPlugin() {
@@ -132,6 +133,7 @@ public class NotifierPlugin extends JavaPlugin {
 
     /**
      * Gets the SettingsManagers instance
+     *
      * @return SettingManager instance
      */
     public static SettingsManager getSettingsManager() {
@@ -140,6 +142,7 @@ public class NotifierPlugin extends JavaPlugin {
 
     /**
      * Gets the NotifierEventHandler instance
+     *
      * @return NotifierEventHandler instance
      */
     public static NotifierEventHandler getEventHandler() {
@@ -148,20 +151,22 @@ public class NotifierPlugin extends JavaPlugin {
 
     /**
      * Register all Notifier's listeners
+     *
      * @throws Exception
      */
     private void registerListeners() throws Exception {
-        for(Class<?> cls : ClassFinder.find("io.mazenmc.notifier.listeners.bukkit", Object.class, this)) {
+        for (Class<?> cls : ClassFinder.find("io.mazenmc.notifier.listeners.bukkit", Object.class, this)) {
             getServer().getPluginManager().registerEvents((Listener) cls.newInstance(), plugin);
         }
 
-        for(Class<?> cls : ClassFinder.find("io.mazenmc.notifier.listeners.notifier", Object.class, this)) {
+        for (Class<?> cls : ClassFinder.find("io.mazenmc.notifier.listeners.notifier", Object.class, this)) {
             getEventHandler().registerListener((NotifierListener) cls.newInstance());
         }
     }
 
     /**
      * Returns if vault is found
+     *
      * @return If vault is found
      */
     public static boolean vaultDetected() {
@@ -170,6 +175,7 @@ public class NotifierPlugin extends JavaPlugin {
 
     /**
      * Gets the permission registration from vault
+     *
      * @return Permission registration from vault
      */
     public static Permission getPermission() {
@@ -178,6 +184,7 @@ public class NotifierPlugin extends JavaPlugin {
 
     /**
      * Logs the message provided
+     *
      * @param message Message you wish to log
      */
     public static void log(String message) {
@@ -186,6 +193,7 @@ public class NotifierPlugin extends JavaPlugin {
 
     /**
      * Gets the NotifierServer instance
+     *
      * @return NotifierServer instance
      */
     public static NotifierServer getNotifierServer() {
@@ -193,7 +201,7 @@ public class NotifierPlugin extends JavaPlugin {
     }
 
     private boolean setupPermissions() {
-        if(Bukkit.getPluginManager().getPlugin("Vault") == null) {
+        if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
 

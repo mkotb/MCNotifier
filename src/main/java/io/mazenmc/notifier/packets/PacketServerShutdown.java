@@ -26,7 +26,8 @@ public class PacketServerShutdown extends Packet {
 
     private static final int id = 2;
 
-    public PacketServerShutdown(String[] args) {}
+    public PacketServerShutdown(String[] args) {
+    }
 
     @Override
     public void handle() {

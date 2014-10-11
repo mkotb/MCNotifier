@@ -16,7 +16,8 @@ public class PacketSimpleMessage extends Packet {
     }
 
     @Override
-    public void handle() {}
+    public void handle() {
+    }
 
     @Override
     public String toString() {

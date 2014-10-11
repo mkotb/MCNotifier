@@ -2,11 +2,12 @@ package io.mazenmc.notifier.packets;
 
 import io.mazenmc.notifier.Notifier;
 
-public class PacketAllPlayerDataRequest extends Packet{
+public class PacketAllPlayerDataRequest extends Packet {
 
     private static final int ID = 20;
 
-    public PacketAllPlayerDataRequest(String[] args) {}
+    public PacketAllPlayerDataRequest(String[] args) {
+    }
 
     public static int getID() {
         return ID;

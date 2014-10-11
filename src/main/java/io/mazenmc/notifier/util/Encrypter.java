@@ -25,19 +25,18 @@ import java.util.UUID;
 public final class Encrypter {
 
     /**
-     *
      * @param plainText the text to be encrypted
-     * @param key the key to encypt with
+     * @param key       the key to encypt with
      * @return
      * @throws GeneralSecurityException if encryption failed
      */
     public static String encrypt(String plainText, UUID key) throws GeneralSecurityException {
         String encryptionKey = key.toString().replaceAll("-", "");
         byte[] b = new byte[encryptionKey.length() / 2];
-        for (int i = 0; i < b.length; i++){
+        for (int i = 0; i < b.length; i++) {
             int index = i * 2;
             int v = Integer.parseInt(encryptionKey.substring(index, index + 2), 16);
-            b[i] = (byte)v;
+            b[i] = (byte) v;
         }
         SecretKeySpec sks = new SecretKeySpec(b, "AES");
         Cipher cipher = Cipher.getInstance("AES");
@@ -55,28 +54,27 @@ public final class Encrypter {
     }
 
     /**
-     *
      * @param encryptedTextBytes the encrypted string
-     * @param key the key to decrypt with
+     * @param key                the key to decrypt with
      * @return decrypted string
      * @throws GeneralSecurityException if decryption fails
      */
     public static String decrypt(String encryptedTextBytes, UUID key) throws GeneralSecurityException {
         String encryptionKey = key.toString().replaceAll("-", "");
         byte[] b = new byte[encryptionKey.length() / 2];
-        for (int i = 0; i < b.length; i++){
+        for (int i = 0; i < b.length; i++) {
             int index = i * 2;
             int v = Integer.parseInt(encryptionKey.substring(index, index + 2), 16);
-            b[i] = (byte)v;
+            b[i] = (byte) v;
         }
         SecretKeySpec sks = new SecretKeySpec(b, "AES");
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, sks);
         b = new byte[encryptedTextBytes.length() / 2];
-        for (int i = 0; i < b.length; i++){
+        for (int i = 0; i < b.length; i++) {
             int index = i * 2;
             int v = Integer.parseInt(encryptedTextBytes.substring(index, index + 2), 16);
-            b[i] = (byte)v;
+            b[i] = (byte) v;
         }
         byte[] decrypted = cipher.doFinal(b);
         return new String(decrypted);

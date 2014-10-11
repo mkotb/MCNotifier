@@ -23,7 +23,7 @@ import io.mazenmc.notifier.client.NotifierClient;
 /**
  * Packet sent to the server informing that the client has logged out
  */
-public class PacketClientLogout extends Packet{
+public class PacketClientLogout extends Packet {
 
     private static final int id = 6;
     private NotifierClient client;
@@ -38,12 +38,12 @@ public class PacketClientLogout extends Packet{
 
     @Override
     public void handle() {
-        if(client == null) {
+        if (client == null) {
             return;
         }
 
-        for(NotifierClient client : NotifierClient.getClients()) {
-            if(!client.getUsername().equals(client.getUsername())) {
+        for (NotifierClient client : NotifierClient.getClients()) {
+            if (!client.getUsername().equals(client.getUsername())) {
                 client.write(this);
             }
         }

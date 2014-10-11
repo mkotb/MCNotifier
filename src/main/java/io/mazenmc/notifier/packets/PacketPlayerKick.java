@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class PacketPlayerKick extends Packet{
+public class PacketPlayerKick extends Packet {
 
     private static final int ID = 23;
 
@@ -30,7 +30,7 @@ public class PacketPlayerKick extends Packet{
     public void handle() {
         final Player p = Bukkit.getPlayer(getName());
 
-        if(p != null) {
+        if (p != null) {
             new BukkitRunnable() {
                 @Override
                 public void run() {

@@ -25,7 +25,7 @@ import io.mazenmc.notifier.packets.PacketReader;
 /**
  * Event which will be called any time a packet has been received by a client
  */
-public class PacketReceiveEvent extends NotifierEvent{
+public class PacketReceiveEvent extends NotifierEvent {
 
     private Packet packet;
     private NotifierClient client;
@@ -39,5 +39,7 @@ public class PacketReceiveEvent extends NotifierEvent{
         return packet;
     }
 
-    public NotifierClient getClient() {return client;}
+    public NotifierClient getClient() {
+        return client;
+    }
 }

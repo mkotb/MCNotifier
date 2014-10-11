@@ -28,7 +28,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 import java.util.Arrays;
 import java.util.List;
 
-public class SwearWarning implements Listener{
+public class SwearWarning implements Listener {
 
     private static final List<String> swearWords = Arrays.asList("tit", "fuck", "cunt", "shit", "bitch", "pussy", "dick", "penis", "vagina", "cum", "motherfucker", "anus", "ass", "axwound", "bastard", "beaner", "blowjob",
             "boner", "bullshit", "carpetmuncher", "chesticle", "chink", "clit", "cock", "coon", "cooter", "dipshit", "douche", "dildo", "faggit", "faggot", "fuck", "ginger", "gooch", "honkey", "hoe", "heeb", "jackass", "jizz",
@@ -41,12 +41,12 @@ public class SwearWarning implements Listener{
     public void onChat(PlayerChatEvent event) {
         String message = event.getMessage();
 
-        for(String s : message.split(" ")) {
-            for(String swear : swearWords) {
-                if(s.contains(swear)) {
+        for (String s : message.split(" ")) {
+            for (String swear : swearWords) {
+                if (s.contains(swear)) {
                     PacketPlayerSwear packet = new PacketPlayerSwear(Notifier.generatePacketArgs(event.getPlayer().getName(), String.valueOf(Packet.SPLITTER), swear, String.valueOf(Packet.SPLITTER), message));
 
-                    for(NotifierClient client : NotifierClient.getClients()) {
+                    for (NotifierClient client : NotifierClient.getClients()) {
                         client.write(packet);
                     }
                 }

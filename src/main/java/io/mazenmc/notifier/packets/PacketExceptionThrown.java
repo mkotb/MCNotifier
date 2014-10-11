@@ -2,7 +2,7 @@ package io.mazenmc.notifier.packets;
 
 import io.mazenmc.notifier.Notifier;
 
-public class PacketExceptionThrown extends Packet{
+public class PacketExceptionThrown extends Packet {
 
     private static final int id = 22;
     private String exceptionName;

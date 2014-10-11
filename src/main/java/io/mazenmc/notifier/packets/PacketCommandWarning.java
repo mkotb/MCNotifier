@@ -22,7 +22,7 @@ import io.mazenmc.notifier.Notifier;
 /**
  * Packet sent when player ran a suspicious command
  */
-public class PacketCommandWarning extends Packet{
+public class PacketCommandWarning extends Packet {
 
     private static final int id = 4;
     private String command;

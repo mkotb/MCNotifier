@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * Created by mazen on 7/3/14.
  */
-public class PacketSetPlayerHunger extends Packet{
+public class PacketSetPlayerHunger extends Packet {
 
     private static final int id = 14;
     private String name;
@@ -37,7 +37,7 @@ public class PacketSetPlayerHunger extends Packet{
     public void handle() {
         final Player player = Bukkit.getPlayer(name);
 
-        if(player != null) {
+        if (player != null) {
             new BukkitRunnable() {
                 @Override
                 public void run() {

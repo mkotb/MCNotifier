@@ -25,6 +25,7 @@ public class Notifier {
 
     /**
      * Gets EventHandlers instance from NotifierPlugin
+     *
      * @return EventHandler instance
      */
     public static NotifierEventHandler getEventHandler() {
@@ -33,6 +34,7 @@ public class Notifier {
 
     /**
      * Gets a client by their ID
+     *
      * @param id The ID to get the client by
      * @return Found client
      */
@@ -42,6 +44,7 @@ public class Notifier {
 
     /**
      * Get the client by their username
+     *
      * @param username The String that the user goes by
      * @return Found client
      */
@@ -51,6 +54,7 @@ public class Notifier {
 
     /**
      * Allows for a more code-clean method of creating packet arguments
+     *
      * @param args The arguments you wish to create
      * @return Generated packet arguments
      */
@@ -60,20 +64,22 @@ public class Notifier {
 
     /**
      * Generates an empty set of packet arguments
+     *
      * @return Packet arguments
      */
     public static String[] emptyPacketArgs() {
-        return new String[] {};
+        return new String[]{};
     }
 
     /**
      * Build a string
+     *
      * @return Built string
      */
     public static String buildString(Object... objects) {
         StringBuilder sb = new StringBuilder("");
 
-        for(Object obj : objects) {
+        for (Object obj : objects) {
             sb.append(obj);
         }
 
@@ -82,6 +88,7 @@ public class Notifier {
 
     /**
      * Gets SettingsManager instance from NotifierPlugin
+     *
      * @return SettingManagers instance
      */
     public static SettingsManager getSettingsManager() {

@@ -23,7 +23,9 @@ import io.mazenmc.notifier.client.NotifierClient;
 import io.mazenmc.notifier.packets.PacketLoginError;
 import io.mazenmc.notifier.packets.PacketLoginSuccess;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -31,10 +33,11 @@ import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.UUID;
 
-import static io.mazenmc.notifier.util.Encrypter.*;
 import static io.mazenmc.notifier.NotifierPlugin.log;
+import static io.mazenmc.notifier.util.Encrypter.decrypt;
+import static io.mazenmc.notifier.util.Encrypter.encrypt;
 
-public class NotifierServer extends Thread{
+public class NotifierServer extends Thread {
 
     private static ServerSocket server;
 
@@ -48,9 +51,9 @@ public class NotifierServer extends Thread{
 
     @Override
     public void run() {
-        while(!server.isClosed()) {
+        while (!server.isClosed()) {
             Socket socket;
-            try{
+            try {
                 log("Waiting for new connection...");
                 socket = server.accept();
 
@@ -66,12 +69,14 @@ public class NotifierServer extends Thread{
 
                 String[] d;
 
-                try{
+                try {
                     d = decrypt(dis.readUTF(), initKey).split(":");
-                }catch(Exception ex) {
-                    try{
+                } catch (Exception ex) {
+                    try {
                         dos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Unable to decrypt login information!")).toString(), initKey));
-                    }catch(Exception e) {e.printStackTrace();}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     ex.printStackTrace();
 
@@ -81,14 +86,14 @@ public class NotifierServer extends Thread{
                 String username = d[0];
                 char[] password = d[1].toCharArray();
 
-                if(!NotifierPlugin.getSettingsManager().getUserData().containsKey(username)) {
+                if (!NotifierPlugin.getSettingsManager().getUserData().containsKey(username)) {
                     dos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString(), initKey));
                     dos.flush();
 
                     continue;
                 }
 
-                if(!Arrays.equals(NotifierPlugin.getSettingsManager().getUserData().get(username), password)) {
+                if (!Arrays.equals(NotifierPlugin.getSettingsManager().getUserData().get(username), password)) {
                     dos.writeUTF(encrypt(new PacketLoginError(Notifier.generatePacketArgs("Username/password is incorrect!")).toString(), initKey));
                     dos.flush();
 
@@ -101,23 +106,25 @@ public class NotifierServer extends Thread{
                 new NotifierClient(socket, dis, dos, username, initKey);
 
                 NotifierPlugin.getPlugin().getLogger().info(username + " has logged in!");
-            }catch(SocketTimeoutException ex) {
-                try{
+            } catch (SocketTimeoutException ex) {
+                try {
                     server = new ServerSocket(5932);
                     server.setSoTimeout(Integer.MAX_VALUE);
-                }catch(Exception e) {e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 ex.printStackTrace();
-            }catch(SocketException ex) {
+            } catch (SocketException ex) {
                 break;
-            }catch (Exception ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
 
         }
     }
 
-    public void close() throws IOException{
+    public void close() throws IOException {
         server.close();
     }
 }

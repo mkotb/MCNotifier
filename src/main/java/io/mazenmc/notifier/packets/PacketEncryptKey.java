@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Packet informing the client of their Encryption key
  */
-public class PacketEncryptKey extends Packet{
+public class PacketEncryptKey extends Packet {
 
     private UUID encryptionKey;
     private static final int id = 17;

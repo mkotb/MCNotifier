@@ -19,7 +19,7 @@ package io.mazenmc.notifier.packets;
 
 import io.mazenmc.notifier.Notifier;
 
-public class PacketBlockPlaceWarning extends Packet{
+public class PacketBlockPlaceWarning extends Packet {
 
     private static final int id = 7;
     private String username;

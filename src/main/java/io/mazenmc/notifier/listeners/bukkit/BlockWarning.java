@@ -24,13 +24,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class BlockWarning implements Listener{
+public class BlockWarning implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if(Notifier.getSettingsManager().isBlockSuspicious(event.getBlockPlaced().getType())) {
+        if (Notifier.getSettingsManager().isBlockSuspicious(event.getBlockPlaced().getType())) {
             PacketBlockPlaceWarning packet = new PacketBlockPlaceWarning(Notifier.generatePacketArgs(event.getPlayer().getName(), event.getBlockPlaced().getType().toString()));
-            for(NotifierClient client : NotifierClient.getClients()) {
+            for (NotifierClient client : NotifierClient.getClients()) {
                 client.write(packet);
             }
         }

@@ -22,7 +22,7 @@ import io.mazenmc.notifier.Notifier;
 /**
  * Packet notifying the client that there was an error logging in
  */
-public class PacketLoginError extends Packet{
+public class PacketLoginError extends Packet {
 
     private String reason;
     private static final int id = 0;
@@ -30,7 +30,7 @@ public class PacketLoginError extends Packet{
     public PacketLoginError(String[] args) {
         StringBuilder sb = new StringBuilder("");
 
-        for(String s : args) {
+        for (String s : args) {
             sb.append(s);
             sb.append(' ');
         }

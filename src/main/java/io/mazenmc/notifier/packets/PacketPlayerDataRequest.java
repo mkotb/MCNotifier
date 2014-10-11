@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 /**
  * Packet which will be informing the server that a client wishes to receive information about a certain player
  */
-public class PacketPlayerDataRequest extends Packet{
+public class PacketPlayerDataRequest extends Packet {
 
     private static final int id = 10;
     private Player player;
