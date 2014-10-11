@@ -27,7 +27,7 @@ public final class Encrypter {
     /**
      * @param plainText the text to be encrypted
      * @param key       the key to encypt with
-     * @return
+     * @return encrypted plainText
      * @throws GeneralSecurityException if encryption failed
      */
     public static String encrypt(String plainText, UUID key) throws GeneralSecurityException {
